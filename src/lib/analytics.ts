@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { SAMPLE_PRODUCTS } from '../data';
+
 declare global {
   interface Window {
     dataLayer: any[];
@@ -95,62 +97,136 @@ export function trackEvent(eventName: string, properties: Record<string, any> = 
 /* ==========================================================================
    1. PAGE VIEW TRACKING
    ========================================================================== */
-export function trackPageView(pathname: string) {
-  let eventName = 'home_page_view';
-  let pageTitle = 'Home';
+let lastTrackedPath = '';
+let lastTrackedTime = 0;
+
+export function trackPageView(pathname: string, search: string = '') {
+  const fullPathname = pathname + search;
+  const now = Date.now();
+  if (fullPathname === lastTrackedPath && now - lastTrackedTime < 30) {
+    return;
+  }
+  lastTrackedPath = fullPathname;
+  lastTrackedTime = now;
+
+  let eventName = 'page_view';
+  let pageTitle = '';
+  let metaDesc = '';
 
   const cleanedPath = pathname.split('?')[0];
+  const queryParams = new URLSearchParams(search);
+  const tab = queryParams.get('tab');
 
   if (cleanedPath === '/' || cleanedPath === '') {
     eventName = 'home_page_view';
-    pageTitle = 'Home';
+    pageTitle = 'SorryBaba.com | Cute Apology Gifts & Romantic Digital Present Delivery';
+    metaDesc = 'Cute Apology Gifts & Romantic Digital Present Delivery. Dissolve marital silences, apologize to your partner, wife, husband, girlfriend or boyfriend with handpicked cozy present bundles.';
   } else if (cleanedPath.includes('/wife-husband-gifts')) {
-    eventName = 'wife_husband_page_view';
-    pageTitle = 'Wife & Husband Gifts';
+    if (tab === 'husband') {
+      eventName = 'husband_gifts_page_view';
+      pageTitle = 'Husband Apology Gifts | SorryBaba.com';
+      metaDesc = 'Handpicked cute apology gifts and romantic presents for your husband. Express your sincere apologies with cozy tokens of love.';
+    } else {
+      eventName = 'wife_gifts_page_view';
+      pageTitle = 'Wife Apology Gifts | SorryBaba.com';
+      metaDesc = 'Handpicked cute apology gifts and romantic presents for your wife. Re-ignite your commitment and dissolve marital silences today.';
+    }
   } else if (cleanedPath.includes('/girlfriend-boyfriend-gifts')) {
-    eventName = 'girlfriend_boyfriend_page_view';
-    pageTitle = 'Girlfriend & Boyfriend Gifts';
+    if (tab === 'boyfriend') {
+      eventName = 'boyfriend_gifts_page_view';
+      pageTitle = 'Boyfriend Apology Gifts | SorryBaba.com';
+      metaDesc = 'Find thoughtful apology gifts and romantic presents for your boyfriend. Make up with cute and emotional surprises.';
+    } else {
+      eventName = 'girlfriend_gifts_page_view';
+      pageTitle = 'Girlfriend Apology Gifts | SorryBaba.com';
+      metaDesc = 'Discover the best apology gifts and romantic surprises for your girlfriend. Soft plushies, custom letters, and digital presents.';
+    }
   } else if (cleanedPath.includes('/other-gifts')) {
     eventName = 'other_gifts_page_view';
-    pageTitle = 'Other Apology Gifts';
+    pageTitle = 'Special Gifts | SorryBaba.com';
+    metaDesc = 'Browse special gifts, apology packages, and other unique present options to make someone smile or say sorry.';
   } else if (cleanedPath.includes('/e-gifts')) {
     eventName = 'e_gifts_page_view';
-    pageTitle = 'E-Gifts Customizer-Main';
+    pageTitle = 'Digital E-Gifts | SorryBaba.com';
+    metaDesc = 'Personalize cute digital apology cards, music playbacks, or virtual keepsakes and send them instantly to your partner.';
   } else if (cleanedPath.includes('/all-products')) {
     eventName = 'all_products_page_view';
-    pageTitle = 'All Products Catalog';
+    pageTitle = 'All Gifts | SorryBaba.com';
+    metaDesc = 'Browse our full catalog of apology gifts, romantic presents, e-gifts, and luxury customized scrolls.';
   } else if (cleanedPath.includes('/product/')) {
     eventName = 'product_details_page_view';
-    pageTitle = 'Product Details';
+    const productId = cleanedPath.split('/product/')[1];
+    const product = SAMPLE_PRODUCTS.find(p => p.id === productId);
+    if (product) {
+      pageTitle = `${product.name} | SorryBaba.com`;
+      metaDesc = `Send '${product.name}' as a sweet apology gift. ${product.description || 'Explore our beautiful present ideas to win back their heart.'}`;
+    } else {
+      pageTitle = 'Product Details | SorryBaba.com';
+      metaDesc = 'Explore our apology gift options and premium customized details.';
+    }
   } else if (cleanedPath.includes('/cart')) {
     eventName = 'cart_page_view';
-    pageTitle = 'Full Cart Page';
+    pageTitle = 'Shopping Cart | SorryBaba.com';
+    metaDesc = 'View your shopping cart, review selected apology gifts and options before checking out.';
   } else if (cleanedPath.includes('/checkout')) {
     eventName = 'checkout_page_view';
-    pageTitle = 'Checkout Page';
+    pageTitle = 'Checkout | SorryBaba.com';
+    metaDesc = 'Complete your order details and delivery information. Send your apologies with SorryBaba.';
   } else if (cleanedPath.includes('/contact-us')) {
     eventName = 'contact_page_view';
-    pageTitle = 'Contact Us Page';
+    pageTitle = 'Contact Us | SorryBaba.com';
+    metaDesc = 'Get in touch with SorryBaba customer support. Contact our 24/7 team via WhatsApp or email.';
   } else if (cleanedPath.includes('/faq')) {
     eventName = 'faq_page_view';
-    pageTitle = 'FAQ Page';
+    pageTitle = 'FAQ | SorryBaba.com';
+    metaDesc = 'Read answers to frequently asked questions about our apology gifts, delivery status, customization, and payments.';
   } else if (cleanedPath.includes('/privacy-policy')) {
     eventName = 'privacy_policy_page_view';
-    pageTitle = 'Privacy Policy Page';
+    pageTitle = 'Privacy Policy | SorryBaba.com';
+    metaDesc = 'Read the Privacy Policy of SorryBaba.com to understand how we secure your data and personal information.';
   } else if (cleanedPath.includes('/terms-conditions')) {
     eventName = 'terms_page_view';
-    pageTitle = 'Terms and Conditions Page';
+    pageTitle = 'Terms & Conditions | SorryBaba.com';
+    metaDesc = 'Read the Terms and Conditions of SorryBaba.com for custom details regarding delivery and service terms.';
   } else if (cleanedPath.includes('/success')) {
     eventName = 'order_success_page_view';
-    pageTitle = 'Order Completed Page';
+    pageTitle = 'Order Success | SorryBaba.com';
+    metaDesc = 'Thank you for your order! Your apology gift order was successfully placed.';
   } else {
     eventName = 'other_page_view';
-    pageTitle = pathname;
+    pageTitle = 'SorryBaba.com | Cute Apology Gifts';
+    metaDesc = 'Cute apology gifts and romantic presents for your favorite person.';
   }
 
-  trackEvent(eventName, {
+  // Live updates to Browser elements (title & meta tags)
+  if (typeof document !== 'undefined') {
+    document.title = pageTitle;
+    
+    // Update/Create meta description
+    let metaDescTag = document.querySelector('meta[name="description"]');
+    if (metaDescTag) {
+      metaDescTag.setAttribute('content', metaDesc);
+    } else {
+      metaDescTag = document.createElement('meta');
+      metaDescTag.setAttribute('name', 'description');
+      metaDescTag.setAttribute('content', metaDesc);
+      document.head.appendChild(metaDescTag);
+    }
+  }
+
+  // Track config in GA4 dynamically so future event dispatches align on correct page reference
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('config', GA4_ID, {
+      page_title: pageTitle,
+      page_path: fullPathname,
+      page_location: window.location.href,
+    });
+  }
+
+  // Push standard GTM and custom tracking log
+  trackEvent('page_view', {
     page_title: pageTitle,
-    page_path: pathname,
+    page_path: fullPathname,
     page_name: eventName,
   });
 }

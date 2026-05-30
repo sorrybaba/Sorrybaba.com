@@ -28,15 +28,15 @@ import { FAQ } from './pages/FAQ';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsConditions } from './pages/TermsConditions';
 
-// Reusable scroll-to-top on route navigation
-const ScrollToTop: React.FC = () => {
-  const { pathname } = useLocation();
+// Reusable route tracking listener & scroll-to-top on route navigation
+const RouteTracker: React.FC = () => {
+  const { pathname, search } = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     // Automatic page view analytics trigger on route change
-    trackPageView(pathname);
-  }, [pathname]);
+    trackPageView(pathname, search);
+  }, [pathname, search]);
 
   return null;
 };
@@ -50,7 +50,7 @@ export default function App() {
   return (
     <AppProvider>
       <Router>
-        <ScrollToTop />
+        <RouteTracker />
         <div className="min-h-screen bg-brand-bg flex flex-col justify-between">
           
           {/* Top navigation container */}

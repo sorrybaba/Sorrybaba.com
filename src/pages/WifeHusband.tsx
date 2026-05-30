@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles, AlertCircle, ShoppingBag } from 'lucide-react';
@@ -21,7 +21,14 @@ import {
 } from '../lib/analytics';
 
 export const WifeHusband: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'wife' | 'husband'>('wife');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTabParam = searchParams.get('tab');
+  const activeTab = activeTabParam === 'husband' ? 'husband' : 'wife';
+  
+  const setActiveTab = (tab: 'wife' | 'husband') => {
+    setSearchParams({ tab });
+  };
+
   const { addToCart } = useApp();
   const navigate = useNavigate();
 
