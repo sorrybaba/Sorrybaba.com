@@ -7,7 +7,12 @@ import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Trash2, Plus, Minus, ArrowRight, ShieldCheck, ShoppingBag } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackPageView,
+  trackRemoveFromCart,
+  trackViewCart,
+  trackProceedToCheckoutClick
+} from '../lib/analytics';
 
 export const CartPage: React.FC = () => {
   const {
@@ -22,11 +27,12 @@ export const CartPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Full Cart Page' });
-  }, []);
+    trackPageView('/cart');
+    trackViewCart(cartTotalItems, cartSubtotal);
+  }, [cartTotalItems, cartSubtotal]);
 
   const handleCheckoutNav = () => {
-    trackEvent('begin_checkout', { source: 'cart_page', items_count: cartTotalItems, subtotal: cartSubtotal });
+    trackProceedToCheckoutClick(cartGrandTotal, cartTotalItems);
     navigate('/checkout');
   };
 
@@ -130,7 +136,10 @@ export const CartPage: React.FC = () => {
                   
                   {/* Remove Button */}
                   <button
-                    onClick={() => removeFromCart(item.product.id)}
+                    onClick={() => {
+                      trackRemoveFromCart(item.product, item.quantity);
+                      removeFromCart(item.product.id);
+                    }}
                     className="p-2 text-gray-300 hover:text-red-500 rounded-xl hover:bg-red-50 transition-colors pointer cursor-pointer"
                     aria-label="Delete product option"
                   >

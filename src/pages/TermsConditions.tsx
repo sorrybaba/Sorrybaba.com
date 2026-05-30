@@ -5,11 +5,11 @@
 
 import React, { useEffect } from 'react';
 import { ShieldAlert, BookOpen, Truck, Hammer } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import { trackPageView } from '../lib/analytics';
 
 export const TermsConditions: React.FC = () => {
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Terms and Conditions Page' });
+    trackPageView('/terms-conditions');
   }, []);
 
   return (

@@ -6,11 +6,11 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, BadgeCheck, PhoneCall, HelpCircle } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import { trackPageView, trackWhatsAppOrderSent } from '../lib/analytics';
 
 export const Success: React.FC = () => {
   useEffect(() => {
-    trackEvent('order_success', { page_title: 'Order Completed Successfully' });
+    trackPageView('/success');
   }, []);
 
   return (
@@ -52,6 +52,9 @@ export const Success: React.FC = () => {
           href="https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20just%20placed%20an%20order%20and%20want%20to%20confirm%20my%20details."
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => {
+            trackWhatsAppOrderSent();
+          }}
           className="flex-1 py-3 bg-green-500 hover:bg-green-600 font-extrabold text-xs text-white rounded-xl shadow-sm transition-colors text-center flex items-center justify-center gap-1.5 cursor-pointer"
         >
           <PhoneCall size={14} />

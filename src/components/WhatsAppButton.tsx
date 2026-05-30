@@ -4,13 +4,13 @@
  */
 
 import React, { useState } from 'react';
-import { trackEvent } from '../lib/analytics';
+import { trackFloatingWhatsAppClick } from '../lib/analytics';
 
 export const WhatsAppButton: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(true);
 
   const handleClick = () => {
-    trackEvent('whatsapp_click', { source: 'floating_widget' });
+    trackFloatingWhatsAppClick();
     window.open('https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20would%20like%20to%20get%20assistance%20with%20choosing%20an%20apology%20gift.', '_blank');
   };
 

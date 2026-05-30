@@ -7,7 +7,18 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Wallet, Landmark, PhoneCall, ShieldCheck, ArrowRight, ClipboardList } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackPageView,
+  trackBeginCheckout,
+  trackCheckoutStep1,
+  trackCheckoutStep2,
+  trackCheckoutReview,
+  trackCheckoutSubmit,
+  trackPaymentMethodCodSelected,
+  trackPaymentMethodBankTransferSelected,
+  trackPaymentMethodWhatsAppSelected,
+  trackWhatsAppOrderStarted
+} from '../lib/analytics';
 
 export const Checkout: React.FC = () => {
   const { cart, cartSubtotal, cartShipping, cartGrandTotal, clearCart } = useApp();
@@ -26,11 +37,28 @@ export const Checkout: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bank' | 'whatsapp'>('whatsapp');
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Checkout Page' });
+    trackPageView('/checkout');
     if (cart.length === 0) {
       navigate('/cart');
+    } else {
+      trackBeginCheckout(cartGrandTotal, cart.length);
+      trackCheckoutStep1(cartGrandTotal, cart.length);
     }
   }, [cart, navigate]);
+
+  // Track payment method selection change
+  useEffect(() => {
+    if (cart.length > 0) {
+      if (paymentMethod === 'cod') {
+        trackPaymentMethodCodSelected(cartGrandTotal, cart.length);
+      } else if (paymentMethod === 'bank') {
+        trackPaymentMethodBankTransferSelected(cartGrandTotal, cart.length);
+      } else if (paymentMethod === 'whatsapp') {
+        trackPaymentMethodWhatsAppSelected(cartGrandTotal, cart.length);
+      }
+      trackCheckoutReview(city, paymentMethod, cartGrandTotal, cart.length);
+    }
+  }, [paymentMethod]);
 
   const handleSubmitOrder = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,11 +123,8 @@ Payment Preferred:
 ${paymentMethod.toUpperCase()}`;
 
     // Track checkout submission
-    trackEvent('checkout_submit', {
-      amount: cartGrandTotal,
-      payment_method: paymentMethod,
-      items_count: cart.length
-    });
+    trackCheckoutSubmit(city || 'General', paymentMethod, cartGrandTotal, cart.length);
+    trackWhatsAppOrderStarted(cartGrandTotal, cart.length, paymentMethod);
 
     // Formulate final URL block
     const whatsAppEncodedUrl = `https://wa.me/94776826937?text=${encodeURIComponent(whatsAppMessageText)}`;
@@ -108,7 +133,6 @@ ${paymentMethod.toUpperCase()}`;
     clearCart();
 
     // Trigger open and navigate inside browser frames
-    trackEvent('whatsapp_order_click', { total: cartGrandTotal });
     window.open(whatsAppEncodedUrl, '_blank');
     navigate('/success');
   };
@@ -212,6 +236,7 @@ ${paymentMethod.toUpperCase()}`;
                   required
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
+                  onBlur={() => trackCheckoutStep2(city, cartGrandTotal, cart.length)}
                   placeholder="e.g. Colombo / Kandy"
                   className="w-full text-xs font-semibold text-gray-700 placeholder-gray-400 bg-gray-50 border border-gray-200 focus:outline-none focus:border-brand-pink rounded-xl px-4 py-3"
                 />

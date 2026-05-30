@@ -8,7 +8,17 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles, Send } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackProductClick,
+  trackSelectItem,
+  trackProductImageClick,
+  trackAddToCart,
+  trackAddToCartClick,
+  trackEGiftClick,
+  trackGirlfriendSelected,
+  trackBoyfriendSelected,
+  trackWhatsAppSupportClick
+} from '../lib/analytics';
 
 export const GirlfriendBoyfriend: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'girlfriend' | 'boyfriend'>('girlfriend');
@@ -16,7 +26,11 @@ export const GirlfriendBoyfriend: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Girlfriend & Boyfriend Gifts', tab: activeTab });
+    if (activeTab === 'girlfriend') {
+      trackGirlfriendSelected();
+    } else {
+      trackBoyfriendSelected();
+    }
   }, [activeTab]);
 
   const physicalItems = SAMPLE_PRODUCTS.filter(
@@ -28,14 +42,22 @@ export const GirlfriendBoyfriend: React.FC = () => {
   // The FIRST product shown in every category must be: E-Gift
   const allFilteredItems = [...eGiftItems, ...physicalItems];
 
-  const handleProductClick = (productId: string, isEGift: boolean) => {
-    if (isEGift) {
-      trackEvent('product_click', { product_id: productId, source: 'gf_bf_egift_redirect' });
+  const handleProductClick = (product: any) => {
+    if (product.isEGift) {
+      trackEGiftClick(product.id, product.name);
+      trackProductClick(product, `gf_bf_${activeTab}_egift_redirect`);
+      trackSelectItem(product);
       navigate('/e-gifts');
     } else {
-      trackEvent('product_click', { product_id: productId, source: 'gf_bf_physical' });
-      navigate(`/product/${productId}`);
+      trackProductClick(product, `gf_bf_${activeTab}_physical`);
+      trackSelectItem(product);
+      navigate(`/product/${product.id}`);
     }
+  };
+
+  const handleProductImageClick = (product: any) => {
+    trackProductImageClick(product);
+    trackSelectItem(product);
   };
 
   const renderProductSymbol = (imageName: string) => {
@@ -132,7 +154,10 @@ export const GirlfriendBoyfriend: React.FC = () => {
                 className={`group rounded-3xl p-6 border transition-all duration-300 flex flex-col justify-between ${cardBorder}`}
               >
                 <div>
-                  <div className="relative aspect-square w-full rounded-2xl bg-brand-bg/50 border border-gray-100 flex items-center justify-center text-6xl font-normal overflow-hidden mb-5 select-none hover:scale-[1.02] transform transition-transform">
+                  <div
+                    onClick={() => handleProductImageClick(product)}
+                    className="relative aspect-square w-full rounded-2xl bg-brand-bg/50 border border-gray-100 flex items-center justify-center text-6xl font-normal overflow-hidden mb-5 select-none hover:scale-[1.02] transform transition-transform cursor-pointer"
+                  >
                     <span>{renderProductSymbol(product.image)}</span>
                     <div className="absolute top-3 left-3 flex gap-1">
                       {product.isEGift ? (
@@ -157,7 +182,7 @@ export const GirlfriendBoyfriend: React.FC = () => {
 
                     <h4 className="font-display font-extrabold text-gray-800 text-base leading-tight">
                       <button
-                        onClick={() => handleProductClick(product.id, product.isEGift)}
+                        onClick={() => handleProductClick(product)}
                         className="text-left font-bold focus:none outline-none hover:text-brand-pink transition-colors cursor-pointer"
                       >
                         {product.name}
@@ -184,14 +209,18 @@ export const GirlfriendBoyfriend: React.FC = () => {
 
                   {product.isEGift ? (
                     <button
-                      onClick={() => handleProductClick(product.id, true)}
+                      onClick={() => handleProductClick(product)}
                       className="px-4 py-2 bg-brand-purple hover:bg-brand-purple/95 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm"
                     >
                       Customize E-Gift
                     </button>
                   ) : (
                     <button
-                      onClick={() => addToCart(product, 1, activeTab)}
+                      onClick={() => {
+                        addToCart(product, 1, activeTab);
+                        trackAddToCart(product, 1);
+                        trackAddToCartClick(product.id, product.name, `gf_bf_${activeTab}_page`);
+                      }}
                       className={`px-4 py-2 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
                         isGirlfriend ? 'bg-brand-pink hover:bg-brand-pink/95' : 'bg-brand-blue hover:bg-brand-blue/95'
                       }`}
@@ -216,7 +245,10 @@ export const GirlfriendBoyfriend: React.FC = () => {
           </div>
         </div>
         <button
-          onClick={() => window.open('https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20want%20to%20get%20advice%20on%20how%20to%20apologize%20to%20my%20girlfriend/boyfriend.', '_blank')}
+          onClick={() => {
+            trackWhatsAppSupportClick();
+            window.open('https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20want%20to%20get%20advice%20on%20how%20to%20apologize%20to%20my%20girlfriend/boyfriend.', '_blank');
+          }}
           className="px-6 py-2.5 bg-brand-blue text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer hover:bg-brand-blue/90 transition-all shrink-0 animate-pulse-custom"
         >
           Get Counseling

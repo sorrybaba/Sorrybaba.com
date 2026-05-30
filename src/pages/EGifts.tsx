@@ -8,7 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Sparkles, ArrowRight, Heart, Music, Smartphone, User, FileText, Send, CheckCircle } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackProductView,
+  trackAddToCart,
+  trackAddToCartClick,
+  trackEGiftView,
+  trackPageView
+} from '../lib/analytics';
 
 export const EGifts: React.FC = () => {
   const { addToCart } = useApp();
@@ -29,14 +35,16 @@ export const EGifts: React.FC = () => {
   const [customizeStatus, setCustomizeStatus] = useState<string | null>(null);
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'E-Gifts Customizer-Main' });
+    trackPageView('/e-gifts');
+    trackEGiftView(selectedProduct.id, selectedProduct.name);
   }, []);
 
   const handleTemplateChange = (productId: string) => {
     const matched = digitalProducts.find(p => p.id === productId);
     if (matched) {
       setSelectedProduct(matched);
-      trackEvent('product_view', { product_id: productId, source: 'egifts_customizer_tab' });
+      trackEGiftView(matched.id, matched.name);
+      trackProductView(matched);
     }
   };
 
@@ -57,13 +65,10 @@ export const EGifts: React.FC = () => {
     addToCart(customizedSpecProduct, 1, 'girlfriend');
 
     setCustomizeStatus('E-Gift configured successfully! Item added to your shopping bag.');
-    trackEvent('add_to_cart', {
-      product_id: selectedProduct.id,
-      product_name: selectedProduct.name,
-      sender: yourName,
-      recipient: partnerName,
-      custom_spec: true
-    });
+    
+    // Core custom + recommended tracking
+    trackAddToCart(selectedProduct, 1);
+    trackAddToCartClick(selectedProduct.id, selectedProduct.name, 'egifts_customizer');
 
     setTimeout(() => {
       setCustomizeStatus(null);

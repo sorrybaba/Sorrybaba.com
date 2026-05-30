@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Search, Heart, ShoppingBag, Menu, X } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import { SAMPLE_PRODUCTS } from '../data';
+import { trackSearchUsed, trackSearchButtonClick } from '../lib/analytics';
 
 export const Navbar: React.FC = () => {
   const { cartTotalItems, searchQuery, setSearchQuery, toggleCartDrawer } = useApp();
@@ -18,7 +19,19 @@ export const Navbar: React.FC = () => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      trackEvent('search_used', { query: searchQuery });
+      const resultsCount = SAMPLE_PRODUCTS.filter((product) => {
+        const q = searchQuery.toLowerCase().trim();
+        return !q ||
+          product.name.toLowerCase().includes(q) ||
+          product.category.toLowerCase().includes(q) ||
+          product.description.toLowerCase().includes(q) ||
+          product.subCategory.toLowerCase().includes(q);
+      }).length;
+
+      // Track search parameters
+      trackSearchUsed(searchQuery, resultsCount);
+      trackSearchButtonClick(searchQuery);
+
       navigate(`/all-products?search=${encodeURIComponent(searchQuery)}`);
       setMobileMenuOpen(false);
     }

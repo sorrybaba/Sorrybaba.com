@@ -8,7 +8,16 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackProductClick,
+  trackSelectItem,
+  trackProductImageClick,
+  trackAddToCart,
+  trackAddToCartClick,
+  trackEGiftClick,
+  trackWomenSelected,
+  trackMenSelected
+} from '../lib/analytics';
 
 export const OtherGifts: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'women' | 'men'>('women');
@@ -16,7 +25,11 @@ export const OtherGifts: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Other Apology Gifts', tab: activeTab });
+    if (activeTab === 'women') {
+      trackWomenSelected();
+    } else {
+      trackMenSelected();
+    }
   }, [activeTab]);
 
   const physicalItems = SAMPLE_PRODUCTS.filter(
@@ -28,14 +41,22 @@ export const OtherGifts: React.FC = () => {
   // The FIRST product shown in every category must be: E-Gift
   const allFilteredItems = [...eGiftItems, ...physicalItems];
 
-  const handleProductClick = (productId: string, isEGift: boolean) => {
-    if (isEGift) {
-      trackEvent('product_click', { product_id: productId, source: 'other_gifts_egift_redirect' });
+  const handleProductClick = (product: any) => {
+    if (product.isEGift) {
+      trackEGiftClick(product.id, product.name);
+      trackProductClick(product, `other_gifts_${activeTab}_egift_redirect`);
+      trackSelectItem(product);
       navigate('/e-gifts');
     } else {
-      trackEvent('product_click', { product_id: productId, source: 'other_gifts_physical' });
-      navigate(`/product/${productId}`);
+      trackProductClick(product, `other_gifts_${activeTab}_physical`);
+      trackSelectItem(product);
+      navigate(`/product/${product.id}`);
     }
+  };
+
+  const handleProductImageClick = (product: any) => {
+    trackProductImageClick(product);
+    trackSelectItem(product);
   };
 
   const renderProductSymbol = (imageName: string) => {
@@ -132,7 +153,10 @@ export const OtherGifts: React.FC = () => {
                 className={`group rounded-3xl p-6 border transition-all duration-300 flex flex-col justify-between ${cardBorder}`}
               >
                 <div>
-                  <div className="relative aspect-square w-full rounded-2xl bg-brand-bg/50 border border-gray-100 flex items-center justify-center text-6xl font-normal overflow-hidden mb-5 select-none hover:scale-[1.02] transform transition-transform">
+                  <div
+                    onClick={() => handleProductImageClick(product)}
+                    className="relative aspect-square w-full rounded-2xl bg-brand-bg/50 border border-gray-100 flex items-center justify-center text-6xl font-normal overflow-hidden mb-5 select-none hover:scale-[1.02] transform transition-transform cursor-pointer"
+                  >
                     <span>{renderProductSymbol(product.image)}</span>
                     <div className="absolute top-3 left-3 flex gap-1">
                       {product.isEGift ? (
@@ -157,7 +181,7 @@ export const OtherGifts: React.FC = () => {
 
                     <h4 className="font-display font-extrabold text-gray-800 text-base leading-tight">
                       <button
-                        onClick={() => handleProductClick(product.id, product.isEGift)}
+                        onClick={() => handleProductClick(product)}
                         className="text-left font-bold focus:none outline-none hover:text-brand-pink transition-colors cursor-pointer"
                       >
                         {product.name}
@@ -184,14 +208,18 @@ export const OtherGifts: React.FC = () => {
 
                   {product.isEGift ? (
                     <button
-                      onClick={() => handleProductClick(product.id, true)}
+                      onClick={() => handleProductClick(product)}
                       className="px-4 py-2 bg-brand-purple hover:bg-brand-purple/95 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm"
                     >
                       Customize E-Gift
                     </button>
                   ) : (
                     <button
-                      onClick={() => addToCart(product, 1, activeTab)}
+                      onClick={() => {
+                        addToCart(product, 1, activeTab);
+                        trackAddToCart(product, 1);
+                        trackAddToCartClick(product.id, product.name, `other_gifts_${activeTab}_page`);
+                      }}
                       className={`px-4 py-2 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
                         isWomen ? 'bg-brand-pink hover:bg-brand-pink/95' : 'bg-brand-blue hover:bg-brand-blue/95'
                       }`}

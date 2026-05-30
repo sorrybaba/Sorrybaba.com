@@ -5,11 +5,11 @@
 
 import React, { useEffect } from 'react';
 import { ShieldCheck, Eye, Lock, FileKey } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import { trackPageView } from '../lib/analytics';
 
 export const PrivacyPolicy: React.FC = () => {
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Privacy Policy Page' });
+    trackPageView('/privacy-policy');
   }, []);
 
   return (

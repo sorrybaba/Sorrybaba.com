@@ -5,7 +5,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Mail, Clock, Phone, MapPin, Send, HelpCircle } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackPageView,
+  trackContactFormSubmit,
+  trackWhatsAppSupportClick
+} from '../lib/analytics';
 
 export const ContactUs: React.FC = () => {
   const [name, setName] = useState('');
@@ -14,7 +18,7 @@ export const ContactUs: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Contact Us Page' });
+    trackPageView('/contact-us');
   }, []);
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -22,7 +26,7 @@ export const ContactUs: React.FC = () => {
     if (!name || !email || !message) return;
 
     // Track contact submission
-    trackEvent('contact_submit', { name, email });
+    trackContactFormSubmit(name, email);
     setSubmitted(true);
 
     setTimeout(() => {
@@ -148,8 +152,16 @@ export const ContactUs: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="font-display font-bold text-gray-800 text-xs">WhatsApp Concierge Hotlines</h4>
-                  <a href="https://wa.me/94776826937" className="text-xs text-brand-pink block mt-0.5 hover:underline">+94 77 682 6937</a>
-                  <span className="text-[10px] text-gray-400 font-medium">Text lines are active 24/7. Call back support provided on request.</span>
+                  <a
+                    href="https://wa.me/94776826937"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackWhatsAppSupportClick()}
+                    className="text-xs text-brand-pink block mt-0.5 hover:underline"
+                  >
+                    +94 77 682 6937
+                  </a>
+                  <span className="text-[10px] text-gray-400 font-medium font-serif leading-tight">Text lines are active 24/7. Call back support provided on request.</span>
                 </div>
               </div>
 

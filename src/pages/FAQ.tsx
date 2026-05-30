@@ -6,13 +6,13 @@
 import React, { useState, useEffect } from 'react';
 import { FAQ_ITEMS } from '../data';
 import { HelpCircle, ChevronRight, MessageSquareHeart } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import { trackPageView, trackEvent } from '../lib/analytics';
 
 export const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First open by default
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'FAQ Page' });
+    trackPageView('/faq');
   }, []);
 
   const toggleAccordion = (index: number) => {

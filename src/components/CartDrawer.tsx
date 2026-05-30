@@ -7,7 +7,13 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { X, Plus, Minus, Trash2, ArrowRight, ShieldCheck, ShoppingBag } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackPageView,
+  trackRemoveFromCart,
+  trackProceedToCheckoutClick,
+  trackViewFullCartClick,
+  trackContinueShoppingClick
+} from '../lib/analytics';
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -25,6 +31,7 @@ export const CartDrawer: React.FC = () => {
   useEffect(() => {
     if (isCartOpen) {
       document.body.style.overflow = 'hidden';
+      trackPageView('/cart');
     } else {
       document.body.style.overflow = '';
     }
@@ -36,12 +43,13 @@ export const CartDrawer: React.FC = () => {
   if (!isCartOpen) return null;
 
   const handleCheckoutNav = () => {
-    trackEvent('begin_checkout', { source: 'cart_drawer', items_count: cartTotalItems, subtotal: cartSubtotal });
+    trackProceedToCheckoutClick(cartSubtotal, cartTotalItems);
     toggleCartDrawer(false);
     navigate('/checkout');
   };
 
   const handleViewCartNav = () => {
+    trackViewFullCartClick();
     toggleCartDrawer(false);
     navigate('/cart');
   };
@@ -159,7 +167,10 @@ export const CartDrawer: React.FC = () => {
 
                   {/* Remove Button */}
                   <button
-                    onClick={() => removeFromCart(item.product.id)}
+                    onClick={() => {
+                      trackRemoveFromCart(item.product, item.quantity);
+                      removeFromCart(item.product.id);
+                    }}
                     className="absolute top-2 right-0 p-1.5 text-gray-300 hover:text-red-500 rounded-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
                     aria-label="Delete item option"
                   >
@@ -213,7 +224,10 @@ export const CartDrawer: React.FC = () => {
                     View Full Cart
                   </button>
                   <button
-                    onClick={() => toggleCartDrawer(false)}
+                    onClick={() => {
+                      trackContinueShoppingClick();
+                      toggleCartDrawer(false);
+                    }}
                     className="py-2.5 px-3 border border-brand-pink-soft text-brand-pink bg-brand-pink-soft/10 rounded-xl hover:bg-brand-pink-soft/30 transition-all cursor-pointer"
                   >
                     Keep Shopping

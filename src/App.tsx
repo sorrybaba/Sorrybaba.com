@@ -10,7 +10,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { WhatsAppButton } from './components/WhatsAppButton';
-import { initAnalytics, trackEvent } from './lib/analytics';
+import { initAnalytics, trackEvent, trackPageView } from './lib/analytics';
 
 // Page imports
 import { Home } from './pages/Home';
@@ -35,7 +35,7 @@ const ScrollToTop: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     // Automatic page view analytics trigger on route change
-    trackEvent('page_view', { page_path: pathname });
+    trackPageView(pathname);
   }, [pathname]);
 
   return null;

@@ -41,6 +41,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, subtitle, link, icon
 
   const handleCardClick = () => {
     trackEvent('category_view', { category_title: title, path: link });
+    if (link.includes('wife-husband')) {
+      trackEvent('category_wife_husband_selected', { category_title: title });
+    } else if (link.includes('girlfriend-boyfriend')) {
+      trackEvent('category_girlfriend_boyfriend_selected', { category_title: title });
+    } else if (link.includes('other-gifts')) {
+      trackEvent('category_other_selected', { category_title: title });
+    }
   };
 
   return (

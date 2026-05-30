@@ -10,25 +10,42 @@ import { CategoryCards } from '../components/CategoryCards';
 import { SAMPLE_PRODUCTS } from '../data';
 import { useApp } from '../context/AppContext';
 import { Heart, Sparkles, Send, ShieldAlert, BadgeCheck, MessageCircleHeart } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackProductClick,
+  trackSelectItem,
+  trackProductImageClick,
+  trackSendGiftCtaClick,
+  trackExploreEGiftsCtaClick,
+  trackAddToCart,
+  trackAddToCartClick,
+  trackEGiftClick
+} from '../lib/analytics';
 
 export const Home: React.FC = () => {
   const { addToCart } = useApp();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    trackEvent('page_view', { page_title: 'Home', path: '/' });
-  }, []);
-
   // Filter 3 popular products for home curation
   const featuredProducts = SAMPLE_PRODUCTS.filter(p => p.tags.includes('Popular')).slice(0, 3);
 
-  const handleProductClick = (productId: string) => {
-    trackEvent('product_click', { product_id: productId, source: 'home_featured' });
+  const handleProductClick = (product: any) => {
+    trackProductClick(product, 'home_featured');
+    trackSelectItem(product);
   };
 
-  const handleEGiftRedirect = (productId: string) => {
-    trackEvent('product_click', { product_id: productId, source: 'home_featured_egift' });
+  const handleProductImageClick = (product: any) => {
+    trackProductImageClick(product);
+    trackSelectItem(product);
+  };
+
+  const handleEGiftRedirect = (productOrId: any) => {
+    let product = typeof productOrId === 'string' ? SAMPLE_PRODUCTS.find(p => p.id === productOrId) : productOrId;
+    if (!product) {
+      product = { id: 'e-gift-sorry-card', name: 'Digital Regret Sorry Card', category: 'e-gift', price: 900 };
+    }
+    trackEGiftClick(product.id, product.name);
+    trackProductClick(product, 'home_featured_egift');
+    trackSelectItem(product);
     navigate('/e-gifts');
   };
 
@@ -50,7 +67,7 @@ export const Home: React.FC = () => {
       
       {/* 1. EMOTIONAL HERO SECTION */}
       <section className="relative overflow-hidden pt-12 md:pt-20 pb-16 bg-gradient-to-b from-brand-pink-soft/20 via-white to-brand-bg/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             
             {/* Hero Left Content */}
@@ -72,6 +89,7 @@ export const Home: React.FC = () => {
               <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-2">
                 <Link
                   to="/all-products"
+                  onClick={() => trackSendGiftCtaClick()}
                   className="w-full sm:w-auto px-8 py-4 bg-brand-pink text-white font-extrabold text-sm rounded-2xl shadow-cute hover:bg-brand-pink/95 transition-all text-center flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 >
                   <span>Send A Gift</span>
@@ -80,7 +98,10 @@ export const Home: React.FC = () => {
                 
                 {/* Specific Funnel Entry to E-Gifts */}
                 <button
-                  onClick={() => handleEGiftRedirect('e-gift-sorry-card')}
+                  onClick={() => {
+                    trackExploreEGiftsCtaClick();
+                    handleEGiftRedirect('e-gift-sorry-card');
+                  }}
                   className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-brand-pink-soft text-brand-pink font-extrabold text-sm rounded-2xl shadow-sm hover:bg-brand-pink-soft/10 transition-all text-center flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 >
                   <Sparkles size={15} />
@@ -131,7 +152,10 @@ export const Home: React.FC = () => {
             >
               <div>
                 {/* Product badge */}
-                <div className="relative aspect-square w-full rounded-2xl bg-brand-bg/60 border border-brand-pink-soft/10 mb-5 flex items-center justify-center text-6xl font-normal overflow-hidden group-hover:scale-[1.02] transform transition-transform select-none">
+                <div
+                  onClick={() => handleProductImageClick(product)}
+                  className="relative aspect-square w-full rounded-2xl bg-brand-bg/60 border border-brand-pink-soft/10 mb-5 flex items-center justify-center text-6xl font-normal overflow-hidden group-hover:scale-[1.02] transform transition-transform select-none cursor-pointer"
+                >
                   <span className="filter drop-shadow-md select-none">{renderProductSymbol(product.image)}</span>
                   <div className="absolute top-3 left-3 flex gap-1">
                     {product.isEGift ? (
@@ -154,11 +178,11 @@ export const Home: React.FC = () => {
                   
                   <h3 className="font-display font-extrabold text-gray-800 text-base leading-tight group-hover:text-brand-pink transition-colors">
                     {product.isEGift ? (
-                      <button onClick={() => handleEGiftRedirect(product.id)} className="text-left font-bold focus:none outline-none">
+                      <button onClick={() => handleEGiftRedirect(product)} className="text-left font-bold focus:none outline-none cursor-pointer">
                         {product.name}
                       </button>
                     ) : (
-                      <Link to={`/product/${product.id}`} onClick={() => handleProductClick(product.id)} className="font-bold">
+                      <Link to={`/product/${product.id}`} onClick={() => handleProductClick(product)} className="font-bold">
                         {product.name}
                       </Link>
                     )}
@@ -184,14 +208,18 @@ export const Home: React.FC = () => {
 
                 {product.isEGift ? (
                   <button
-                    onClick={() => handleEGiftRedirect(product.id)}
+                    onClick={() => handleEGiftRedirect(product)}
                     className="px-4 py-2 bg-brand-blue text-white hover:bg-brand-blue/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
                   >
                     Customize E-Gift
                   </button>
                 ) : (
                   <button
-                    onClick={() => addToCart(product, 1)}
+                    onClick={() => {
+                      addToCart(product, 1);
+                      trackAddToCart(product, 1);
+                      trackAddToCartClick(product.id, product.name, 'home_featured');
+                    }}
                     className="px-4 py-2 bg-brand-pink text-white hover:bg-brand-pink/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
                   >
                     Add To Bag

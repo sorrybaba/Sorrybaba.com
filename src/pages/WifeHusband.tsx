@@ -8,7 +8,17 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles, AlertCircle, ShoppingBag } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackProductClick,
+  trackSelectItem,
+  trackProductImageClick,
+  trackAddToCart,
+  trackAddToCartClick,
+  trackEGiftClick,
+  trackWifeSelected,
+  trackHusbandSelected,
+  trackWhatsAppSupportClick
+} from '../lib/analytics';
 
 export const WifeHusband: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'wife' | 'husband'>('wife');
@@ -16,7 +26,11 @@ export const WifeHusband: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'Wife & Husband Gifts', tab: activeTab });
+    if (activeTab === 'wife') {
+      trackWifeSelected();
+    } else {
+      trackHusbandSelected();
+    }
   }, [activeTab]);
 
   // Filter products: Physical ones matching the subcategory AND prepend E-Gifts!
@@ -30,14 +44,22 @@ export const WifeHusband: React.FC = () => {
   // The FIRST product shown in every category must be: E-Gift
   const allFilteredItems = [...eGiftItems, ...physicalItems];
 
-  const handleProductClick = (productId: string, isEGift: boolean) => {
-    if (isEGift) {
-      trackEvent('product_click', { product_id: productId, source: 'wife_husband_egift_redirect' });
+  const handleProductClick = (product: any) => {
+    if (product.isEGift) {
+      trackEGiftClick(product.id, product.name);
+      trackProductClick(product, `wife_husband_${activeTab}_egift_redirect`);
+      trackSelectItem(product);
       navigate('/e-gifts');
     } else {
-      trackEvent('product_click', { product_id: productId, source: 'wife_husband_physical' });
-      navigate(`/product/${productId}`);
+      trackProductClick(product, `wife_husband_${activeTab}_physical`);
+      trackSelectItem(product);
+      navigate(`/product/${product.id}`);
     }
+  };
+
+  const handleProductImageClick = (product: any) => {
+    trackProductImageClick(product);
+    trackSelectItem(product);
   };
 
   const renderProductSymbol = (imageName: string) => {
@@ -134,7 +156,10 @@ export const WifeHusband: React.FC = () => {
                 className={`group rounded-3xl p-6 border transition-all duration-300 flex flex-col justify-between ${cardBorder}`}
               >
                 <div>
-                  <div className="relative aspect-square w-full rounded-2xl bg-brand-bg/50 border border-gray-100 flex items-center justify-center text-6xl font-normal overflow-hidden mb-5 select-none hover:scale-[1.02] transform transition-transform">
+                  <div
+                    onClick={() => handleProductImageClick(product)}
+                    className="relative aspect-square w-full rounded-2xl bg-brand-bg/50 border border-gray-100 flex items-center justify-center text-6xl font-normal overflow-hidden mb-5 select-none hover:scale-[1.02] transform transition-transform cursor-pointer"
+                  >
                     <span>{renderProductSymbol(product.image)}</span>
                     <div className="absolute top-3 left-3 flex gap-1">
                       {product.isEGift ? (
@@ -159,7 +184,7 @@ export const WifeHusband: React.FC = () => {
 
                     <h4 className="font-display font-extrabold text-gray-800 text-base leading-tight">
                       <button
-                        onClick={() => handleProductClick(product.id, product.isEGift)}
+                        onClick={() => handleProductClick(product)}
                         className="text-left font-bold focus:none outline-none hover:text-brand-pink transition-colors cursor-pointer"
                       >
                         {product.name}
@@ -186,14 +211,18 @@ export const WifeHusband: React.FC = () => {
 
                   {product.isEGift ? (
                     <button
-                      onClick={() => handleProductClick(product.id, true)}
+                      onClick={() => handleProductClick(product)}
                       className="px-4 py-2 bg-brand-purple hover:bg-brand-purple/95 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm"
                     >
                       Customize E-Gift
                     </button>
                   ) : (
                     <button
-                      onClick={() => addToCart(product, 1, activeTab)}
+                      onClick={() => {
+                        addToCart(product, 1, activeTab);
+                        trackAddToCart(product, 1);
+                        trackAddToCartClick(product.id, product.name, `wife_husband_${activeTab}_page`);
+                      }}
                       className={`px-4 py-2 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
                         isWife ? 'bg-brand-pink hover:bg-brand-pink/95' : 'bg-brand-blue hover:bg-brand-blue/95'
                       }`}
@@ -218,8 +247,11 @@ export const WifeHusband: React.FC = () => {
           </div>
         </div>
         <button
-          onClick={() => window.open('https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20want%20to%20add%20a%20handwritten%20apology%20scroll%20to%20my%20wife/husband%20gift.', '_blank')}
-          className="px-6 py-2.5 bg-brand-pink text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer hover:bg-brand-pink/90 transition-all shrink-0"
+          onClick={() => {
+            trackWhatsAppSupportClick();
+            window.open('https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20want%20to%20add%20a%20handwritten%20apology%20scroll%20to%20my%20wife/husband%20gift.', '_blank');
+          }}
+          className="px-6 py-2.5 bg-brand-pink text-white rounded-xl text-xs font-semibold shadow-sm cursor-pointer hover:bg-brand-pink/90 transition-all shrink-0"
         >
           Request Scroll
         </button>

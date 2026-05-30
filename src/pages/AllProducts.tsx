@@ -9,7 +9,21 @@ import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Product } from '../types';
 import { Filter, SlidersHorizontal, Search, Star, MessageSquareCode, Archive, ShoppingBag } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackProductClick,
+  trackSelectItem,
+  trackProductImageClick,
+  trackProductSearchResultClick,
+  trackFilterPriceUsed,
+  trackFilterCategoryUsed,
+  trackFilterEGiftUsed,
+  trackFilterPopularUsed,
+  trackFilterRomanticUsed,
+  trackFilterApologyUsed,
+  trackAddToCart,
+  trackAddToCartClick,
+  trackEGiftClick
+} from '../lib/analytics';
 
 export const AllProducts: React.FC = () => {
   const { searchQuery, setSearchQuery, addToCart } = useApp();
@@ -23,8 +37,6 @@ export const AllProducts: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>('popular');
 
   useEffect(() => {
-    trackEvent('page_view', { page_title: 'All Products Catalog' });
-    
     // Parse query string for search filters if navigated with search
     const params = new URLSearchParams(location.search);
     const searchParam = params.get('search');
@@ -34,9 +46,28 @@ export const AllProducts: React.FC = () => {
   }, [location.search, setSearchQuery]);
 
   // Handle category-funnel redirect for digital products
-  const handleEGiftRedirect = (productId: string) => {
-    trackEvent('product_click', { product_id: productId, source: 'all_products_catalog_egift' });
+  const handleEGiftRedirect = (productOrId: any) => {
+    const product = typeof productOrId === 'string' ? SAMPLE_PRODUCTS.find(p => p.id === productOrId) : productOrId;
+    if (product) {
+      trackEGiftClick(product.id, product.name);
+      trackProductClick(product, 'all_products_catalog_egift');
+      trackSelectItem(product);
+    }
     navigate('/e-gifts');
+  };
+
+  const handleProductClick = (product: any) => {
+    if (searchQuery.trim()) {
+      trackProductSearchResultClick(product, searchQuery);
+    } else {
+      trackProductClick(product, 'all_products_catalog');
+    }
+    trackSelectItem(product);
+  };
+
+  const handleProductImageClick = (product: any) => {
+    trackProductImageClick(product);
+    trackSelectItem(product);
   };
 
   // Tag options available
@@ -79,7 +110,25 @@ export const AllProducts: React.FC = () => {
 
   // Tracking on filter use
   const handleFilterUpdate = (type: string, value: any) => {
-    trackEvent('filter_used', { filter_type: type, filter_value: value });
+    if (type === 'price-slider') {
+      trackFilterPriceUsed(Number(value));
+    } else if (type === 'style') {
+      trackFilterCategoryUsed(value);
+      if (value === 'e-gift') {
+        trackFilterEGiftUsed(true);
+      } else {
+        trackFilterEGiftUsed(false);
+      }
+    } else if (type === 'tag') {
+      if (value === 'Romantic') {
+        trackFilterRomanticUsed(true);
+      } else if (value === 'Apology') {
+        trackFilterApologyUsed(true);
+      } else if (value === 'Popular') {
+        trackFilterPopularUsed(true);
+      }
+      trackFilterCategoryUsed(value);
+    }
   };
 
   const renderProductSymbol = (imageName: string) => {
@@ -281,7 +330,10 @@ export const AllProducts: React.FC = () => {
                   className="group bg-white rounded-3xl p-6 border border-gray-100 hover:border-brand-pink-soft shadow-xs hover:shadow-cute transition-all duration-300 flex flex-col justify-between"
                 >
                   <div>
-                    <div className="relative aspect-square w-full rounded-2xl bg-brand-bg/60 border border-brand-pink-soft/10 mb-5 flex items-center justify-center text-6xl font-normal overflow-hidden group-hover:scale-[1.02] transform transition-transform select-none">
+                    <div
+                      onClick={() => handleProductImageClick(product)}
+                      className="relative aspect-square w-full rounded-2xl bg-brand-bg/60 border border-brand-pink-soft/10 mb-5 flex items-center justify-center text-6xl font-normal overflow-hidden group-hover:scale-[1.02] transform transition-transform select-none cursor-pointer"
+                    >
                       <span className="filter drop-shadow-md select-none">{renderProductSymbol(product.image)}</span>
                       <div className="absolute top-3 left-3 flex gap-1">
                         {product.isEGift ? (
@@ -304,11 +356,11 @@ export const AllProducts: React.FC = () => {
 
                       <h3 className="font-display font-extrabold text-gray-800 text-sm leading-tight group-hover:text-brand-pink transition-colors">
                         {product.isEGift ? (
-                          <button onClick={() => handleEGiftRedirect(product.id)} className="text-left font-bold focus:none outline-none">
+                          <button onClick={() => handleEGiftRedirect(product)} className="text-left font-bold focus:none outline-none cursor-pointer">
                             {product.name}
                           </button>
                         ) : (
-                          <Link to={`/product/${product.id}`} className="font-bold">
+                          <Link to={`/product/${product.id}`} onClick={() => handleProductClick(product)} className="font-bold">
                             {product.name}
                           </Link>
                         )}
@@ -334,7 +386,7 @@ export const AllProducts: React.FC = () => {
 
                     {product.isEGift ? (
                       <button
-                        onClick={() => handleEGiftRedirect(product.id)}
+                        onClick={() => handleEGiftRedirect(product)}
                         className="px-4 py-2 bg-brand-purple text-white hover:bg-brand-purple/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
                       >
                         Customize
@@ -343,7 +395,8 @@ export const AllProducts: React.FC = () => {
                       <button
                         onClick={() => {
                           addToCart(product, 1);
-                          trackEvent('add_to_cart', { product_id: product.id, source: 'all_products_catalog' });
+                          trackAddToCart(product, 1);
+                          trackAddToCartClick(product.id, product.name, 'all_products_catalog');
                         }}
                         className="px-4 py-2 bg-brand-pink text-white hover:bg-brand-pink/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
                       >

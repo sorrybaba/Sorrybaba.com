@@ -8,7 +8,13 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles, Plus, Minus, ArrowLeft, Star, ChevronDown, ChevronUp, ShieldCheck, ShoppingBag } from 'lucide-react';
-import { trackEvent } from '../lib/analytics';
+import {
+  trackViewItem,
+  trackProductView,
+  trackAddToCart,
+  trackAddToCartClick,
+  trackProductWhatsAppClick
+} from '../lib/analytics';
 
 export const ProductDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,11 +35,17 @@ export const ProductDetails: React.FC = () => {
 
   useEffect(() => {
     if (product) {
-      trackEvent('product_view', {
-        product_id: product.id,
-        product_name: product.name,
+      trackViewItem({
+        id: product.id,
+        name: product.name,
+        category: product.category,
         price: product.price,
-        is_e_gift: product.isEGift
+      });
+      trackProductView({
+        id: product.id,
+        name: product.name,
+        category: product.category,
+        price: product.price,
       });
     }
   }, [product, id]);
@@ -55,6 +67,8 @@ export const ProductDetails: React.FC = () => {
 
   const handleAddToCart = () => {
     addToCart(product, quantity);
+    trackAddToCart(product, quantity);
+    trackAddToCartClick(product.id, product.name, 'product_details_page');
   };
 
   const increaseQty = () => setQuantity(prev => prev + 1);
@@ -192,10 +206,19 @@ export const ProductDetails: React.FC = () => {
           )}
 
           {/* Secure details tag */}
-          <div className="p-3.5 bg-brand-bg rounded-2xl border border-brand-pink-soft/10 text-[10px] font-semibold text-gray-500 leading-none flex items-center gap-2">
-            <ShieldCheck size={14} className="text-brand-pink shrink-0" />
-            <span>Coordinated entirely via WhatsApp (+94776826937) once checkout forms are placed.</span>
-          </div>
+          <a
+            href={`https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20am%20interested%20in%20the%20apology%20gift%3A%20${encodeURIComponent(product.name)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackProductWhatsAppClick(product.id, product.name)}
+            className="p-3.5 bg-green-50 hover:bg-green-100 rounded-2xl border border-green-200 text-[10px] font-semibold text-emerald-800 flex items-center justify-between gap-2 cursor-pointer transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={14} className="text-green-600 shrink-0" />
+              <span>Have questions? Chat with our WhatsApp Apology Concierge</span>
+            </div>
+            <strong className="text-emerald-700 underline shrink-0 font-bold uppercase tracking-wider">Chat Now</strong>
+          </a>
 
         </div>
 
