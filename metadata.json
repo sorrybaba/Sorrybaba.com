@@ -1,0 +1,6 @@
+{
+  "name": "SorryBaba.com",
+  "description": "Your go-to apology gift platform to say sorry, send cute digital/physical gifts, and reconnect with your loved ones.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
