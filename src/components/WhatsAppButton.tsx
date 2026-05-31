@@ -3,12 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { trackFloatingWhatsAppClick } from '../lib/analytics';
 
 export const WhatsAppButton: React.FC = () => {
-  const [showTooltip, setShowTooltip] = useState(true);
-
   const handleClick = () => {
     trackFloatingWhatsAppClick();
     window.open('https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20would%20like%20to%20get%20assistance%20with%20choosing%20an%20apology%20gift.', '_blank');
@@ -16,24 +14,6 @@ export const WhatsAppButton: React.FC = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2 group pointer-events-none">
-      
-      {/* Tooltip speech bubble */}
-      {showTooltip && (
-        <div className="pointer-events-auto bg-white border border-brand-pink-soft text-brand-pink shadow-cute-hover rounded-2xl px-4 py-2.5 text-xs font-semibold relative animate-float-slow transition-all duration-300 max-w-[200px] text-center flex items-center gap-1.5">
-          <span>Need help apologizing? Chat now! 🌸</span>
-          <button
-            onClick={(e) => { e.stopPropagation(); setShowTooltip(false); }}
-            className="text-gray-400 hover:text-gray-700 font-bold ml-1.5 text-[11px]"
-            title="Dismiss"
-          >
-            ×
-          </button>
-          
-          {/* Bubble tail decoration */}
-          <div className="absolute right-6 -bottom-1.5 w-3 h-3 bg-white border-r border-b border-brand-pink-soft rotate-45"></div>
-        </div>
-      )}
-
       {/* Main floating circle button */}
       <button
         onClick={handleClick}
