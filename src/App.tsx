@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { HashRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -44,25 +44,11 @@ const RouteTracker: React.FC = () => {
   return null;
 };
 
-// Standalone route selector & secure redirect engine
-const RouteBouncer: React.FC<{ isPreviewActive: boolean }> = ({ isPreviewActive }) => {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const isComingSoonActive = SITE_MODE === 'coming_soon' || SHOW_COMING_SOON === true;
-    if (isComingSoonActive && !isPreviewActive && pathname !== '/coming-soon') {
-      navigate('/coming-soon', { replace: true });
-    }
-  }, [pathname, isPreviewActive, navigate]);
-
-  return null;
-};
-
 // Layout wrap containing custom standalone routing views
 const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: boolean) => void }> = ({ isPreviewActive, setIsPreviewActive }) => {
   const { pathname } = useLocation();
-  const showGlobalLayout = pathname !== '/coming-soon';
+  const isComingSoonPage = pathname === '/coming-soon' || (pathname === '/' && SITE_MODE === 'coming_soon' && !isPreviewActive);
+  const showGlobalLayout = !isComingSoonPage;
 
   return (
     <div className="min-h-screen bg-brand-bg flex flex-col justify-between relative">
@@ -73,7 +59,13 @@ const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: 
       {/* Primary Viewframe with margin limits */}
       <main className={showGlobalLayout ? "flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12" : "flex-1 w-full"}>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={
+            SITE_MODE === 'coming_soon' && !isPreviewActive ? (
+              <ComingSoon onBypass={() => setIsPreviewActive(true)} />
+            ) : (
+              <Home />
+            )
+          } />
           <Route path="/coming-soon" element={<ComingSoon onBypass={() => setIsPreviewActive(true)} />} />
           <Route path="/wife-husband-gifts" element={<WifeHusband />} />
           <Route path="/girlfriend-boyfriend-gifts" element={<GirlfriendBoyfriend />} />
@@ -185,7 +177,6 @@ export default function App() {
     <AppProvider>
       <Router>
         <RouteTracker />
-        <RouteBouncer isPreviewActive={isPreviewActive} />
         <AppLayout isPreviewActive={isPreviewActive} setIsPreviewActive={setIsPreviewActive} />
       </Router>
     </AppProvider>
