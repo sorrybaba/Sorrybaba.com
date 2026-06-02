@@ -6,6 +6,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { CartItem, Product } from '../types';
 import { trackEvent } from '../lib/analytics';
+import { safeStorage } from '../lib/storage';
 
 interface AppContextProps {
   cart: CartItem[];
@@ -33,7 +34,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // Initial load from local storage
   useEffect(() => {
     try {
-      const storedCart = localStorage.getItem('sorrybaba_cart');
+      const storedCart = safeStorage.getItem('sorrybaba_cart');
       if (storedCart) {
         setCart(JSON.parse(storedCart));
       }
@@ -46,7 +47,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const saveCart = (newCart: CartItem[]) => {
     setCart(newCart);
     try {
-      localStorage.setItem('sorrybaba_cart', JSON.stringify(newCart));
+      safeStorage.setItem('sorrybaba_cart', JSON.stringify(newCart));
     } catch (e) {
       console.error('Failed to save cart to localStorage', e);
     }

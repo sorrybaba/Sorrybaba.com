@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { safeStorage } from './storage';
+
 export interface WaitingListEntry {
   name: string;
   email: string;
@@ -32,7 +34,7 @@ export async function saveWaitingListEntry(entry: Omit<WaitingListEntry, 'date' 
     };
 
     // 1. Core storage: Local persistence
-    const existingStr = localStorage.getItem('sorrybaba_waiting_list');
+    const existingStr = safeStorage.getItem('sorrybaba_waiting_list');
     const existingList: WaitingListEntry[] = existingStr ? JSON.parse(existingStr) : [];
     
     // Prevent duplicate emails
@@ -40,7 +42,7 @@ export async function saveWaitingListEntry(entry: Omit<WaitingListEntry, 'date' 
       console.warn(`[Waiting List] Email '${entry.email}' is already registered in local storage.`);
     } else {
       existingList.push(fullEntry);
-      localStorage.setItem('sorrybaba_waiting_list', JSON.stringify(existingList));
+      safeStorage.setItem('sorrybaba_waiting_list', JSON.stringify(existingList));
     }
 
     // 2. Integration hook: Google Sheets (Placeholder)
@@ -83,6 +85,6 @@ export async function saveWaitingListEntry(entry: Omit<WaitingListEntry, 'date' 
  */
 export function getWaitingListEntries(): WaitingListEntry[] {
   if (typeof window === 'undefined') return [];
-  const listStr = localStorage.getItem('sorrybaba_waiting_list');
+  const listStr = safeStorage.getItem('sorrybaba_waiting_list');
   return listStr ? JSON.parse(listStr) : [];
 }

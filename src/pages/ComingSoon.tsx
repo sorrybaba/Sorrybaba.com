@@ -7,6 +7,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { trackEvent } from '../lib/analytics';
 import { saveWaitingListEntry } from '../lib/waitingList';
 import { Sparkles, Heart, MessageCircle, Instagram, Facebook, Share2, ArrowRight, Music, AlertCircle } from 'lucide-react';
+import { safeStorage } from '../lib/storage';
 
 interface ComingSoonProps {
   onBypass: () => void;
@@ -178,10 +179,10 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
     });
 
     // Handle Visitor Types
-    const visited = localStorage.getItem('sorrybaba_visited_before');
+    const visited = safeStorage.getItem('sorrybaba_visited_before');
     const visitorTypeStr = visited ? 'returning_visitor' : 'new_visitor';
     if (!visited) {
-      localStorage.setItem('sorrybaba_visited_before', 'true');
+      safeStorage.setItem('sorrybaba_visited_before', 'true');
     }
     trackEvent(visitorTypeStr, {
       visitor_type: visitorTypeStr,
@@ -286,7 +287,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
       trackEvent('notify_me_submit', {
         form_name: 'waiting_list',
         page_title: document.title,
-        visitor_type: localStorage.getItem('sorrybaba_visited_before') ? 'returning_visitor' : 'new_visitor',
+        visitor_type: safeStorage.getItem('sorrybaba_visited_before') ? 'returning_visitor' : 'new_visitor',
         country: visitorLocation.country,
         city: visitorLocation.city,
         referrer: document.referrer || 'Direct',
@@ -314,7 +315,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
       button_name: `${platform} Link`,
       page_title: document.title,
       device_type: getDeviceType(),
-      visitor_type: localStorage.getItem('sorrybaba_visited_before') ? 'returning_visitor' : 'new_visitor'
+      visitor_type: safeStorage.getItem('sorrybaba_visited_before') ? 'returning_visitor' : 'new_visitor'
     });
 
     window.open(url, '_blank');
@@ -394,7 +395,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
         <button
           onClick={() => {
             trackEvent('preview_mode_access', { page_title: document.title, trigger: 'ComingSoon Button' });
-            localStorage.setItem('sorrybaba_preview_mode', 'true');
+            safeStorage.setItem('sorrybaba_preview_mode', 'true');
             onBypass();
           }}
           onMouseEnter={() => handleElementHover('Admin Preview Secret Option')}

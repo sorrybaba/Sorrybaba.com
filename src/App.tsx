@@ -13,6 +13,7 @@ import { WhatsAppButton } from './components/WhatsAppButton';
 import { initAnalytics, trackEvent, trackPageView } from './lib/analytics';
 import { SHOW_COMING_SOON, SITE_MODE } from './site-config';
 import { ComingSoon } from './pages/ComingSoon';
+import { safeStorage } from './lib/storage';
 
 
 // Page imports
@@ -104,7 +105,7 @@ const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: 
           <button
             onClick={() => {
               trackEvent('preview_mode_exit', { page_title: document.title, trigger: 'App Bypass Bar' });
-              localStorage.removeItem('sorrybaba_preview_mode');
+              safeStorage.removeItem('sorrybaba_preview_mode');
               // Wipe query parameters from address bar to safeguard aesthetics
               if (window.history && window.history.replaceState) {
                 const cleanUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.hash.split('?')[0];
@@ -138,10 +139,10 @@ export default function App() {
     
     const params = new URLSearchParams(searchStr);
     if (params.get('preview') === 'sorrybabaadmin') {
-      localStorage.setItem('sorrybaba_preview_mode', 'true');
+      safeStorage.setItem('sorrybaba_preview_mode', 'true');
       return true;
     }
-    return localStorage.getItem('sorrybaba_preview_mode') === 'true';
+    return safeStorage.getItem('sorrybaba_preview_mode') === 'true';
   });
 
   useEffect(() => {
@@ -157,7 +158,7 @@ export default function App() {
       }
       const params = new URLSearchParams(searchStr);
       if (params.get('preview') === 'sorrybabaadmin') {
-        localStorage.setItem('sorrybaba_preview_mode', 'true');
+        safeStorage.setItem('sorrybaba_preview_mode', 'true');
         setIsPreviewActive(true);
       }
     };
