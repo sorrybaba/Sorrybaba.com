@@ -31,6 +31,7 @@ import { ContactUs } from './pages/ContactUs';
 import { FAQ } from './pages/FAQ';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsConditions } from './pages/TermsConditions';
+import ComingSoonAnalyticsDashboard from './pages/ComingSoonAnalytics';
 
 // Reusable route tracking listener & scroll-to-top on route navigation
 const RouteTracker: React.FC = () => {
@@ -49,7 +50,7 @@ const RouteTracker: React.FC = () => {
 const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: boolean) => void }> = ({ isPreviewActive, setIsPreviewActive }) => {
   const { pathname } = useLocation();
   const normalizedPath = pathname.toLowerCase().replace(/\/$/, "");
-  const isComingSoonPage = normalizedPath === '/coming-soon' || (pathname === '/' && SITE_MODE === 'coming_soon' && !isPreviewActive);
+  const isComingSoonPage = normalizedPath === '/coming-soon' || normalizedPath === '/coming-soon/analytics' || (pathname === '/' && SITE_MODE === 'coming_soon' && !isPreviewActive);
   const showGlobalLayout = !isComingSoonPage;
 
   return (
@@ -70,6 +71,7 @@ const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: 
           } />
           <Route path="/coming-soon" element={<ComingSoon onBypass={() => setIsPreviewActive(true)} />} />
           <Route path="/coming-soon/" element={<ComingSoon onBypass={() => setIsPreviewActive(true)} />} />
+          <Route path="/coming-soon/analytics" element={<ComingSoonAnalyticsDashboard />} />
           <Route path="/wife-husband-gifts" element={<WifeHusband />} />
           <Route path="/girlfriend-boyfriend-gifts" element={<GirlfriendBoyfriend />} />
           <Route path="/other-gifts" element={<OtherGifts />} />

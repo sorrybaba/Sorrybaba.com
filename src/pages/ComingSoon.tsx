@@ -50,7 +50,12 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [visitorLocation, setVisitorLocation] = useState({ country: 'Sri Lanka', city: 'Colombo' });
 
-  // 3. User agent & visitor profiling helpers
+  // 3. Form input focus/change indicators to avoid duplicate fired triggers
+  const [formStarted, setFormStarted] = useState(false);
+  const [nameTracked, setNameTracked] = useState(false);
+  const [emailTracked, setEmailTracked] = useState(false);
+
+  // 4. User agent & visitor profiling helpers
   const getDeviceType = () => {
     if (typeof window === 'undefined') return 'Desktop';
     const ua = navigator.userAgent;
@@ -87,7 +92,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
     return 'Referral';
   };
 
-  // 4. Geolocation fetch
+  // 5. Geolocation fetch
   useEffect(() => {
     fetch('https://ipapi.co/json/')
       .then(res => res.json())
@@ -104,9 +109,23 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
       });
   }, []);
 
-  // 5. Scroll tracking Depth
+  // 6. Unified core traffic metadata dataset
+  const getTrafficData = () => {
+    return {
+      page_location: typeof window !== 'undefined' ? window.location.href : '',
+      page_title: typeof document !== 'undefined' ? document.title : 'SorryBaba | Coming Soon',
+      referrer: typeof document !== 'undefined' ? (document.referrer || 'Direct') : 'Direct',
+      device_type: getDeviceType(),
+      browser: getBrowser(),
+      country: visitorLocation.country,
+      city: visitorLocation.city,
+      language: typeof navigator !== 'undefined' ? (navigator.language || 'en-US') : 'en-US'
+    };
+  };
+
+  // 7. Scroll tracking Depth (fires once per depth per page view)
   useEffect(() => {
-    const trackedDepths = { d25: false, d50: false, d75: false, d90: false };
+    const trackedDepths = { d25: false, d50: false, d75: false, d100: false };
     const handleScroll = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -115,29 +134,32 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
 
       if (scrollPercent >= 25 && !trackedDepths.d25) {
         trackedDepths.d25 = true;
-        trackEvent('scroll_25', { page_title: document.title, percent: 25, path: window.location.pathname });
+        trackEvent('coming_soon_scroll_25', getTrafficData());
       }
       if (scrollPercent >= 50 && !trackedDepths.d50) {
         trackedDepths.d50 = true;
-        trackEvent('scroll_50', { page_title: document.title, percent: 50, path: window.location.pathname });
+        trackEvent('coming_soon_scroll_50', getTrafficData());
       }
       if (scrollPercent >= 75 && !trackedDepths.d75) {
         trackedDepths.d75 = true;
-        trackEvent('scroll_75', { page_title: document.title, percent: 75, path: window.location.pathname });
+        trackEvent('coming_soon_scroll_75', getTrafficData());
       }
-      if (scrollPercent >= 90 && !trackedDepths.d90) {
-        trackedDepths.d90 = true;
-        trackEvent('scroll_90', { page_title: document.title, percent: 90, path: window.location.pathname });
+      if (scrollPercent >= 98 && !trackedDepths.d100) {
+        trackedDepths.d100 = true;
+        trackEvent('coming_soon_scroll_100', getTrafficData());
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [visitorLocation]);
 
-  // 6. Metadata, Schema injection, and Engagement session heartbeat
+  // 8. Page Loads and Unmount Trackings
+  const hasFiredInitEvents = useRef(false);
+  const hasFiredCountdownComplete = useRef(false);
+
   useEffect(() => {
-    // Schema Scripts Injection
+    // Inject seo schemas
     const script1 = document.createElement('script');
     script1.type = 'application/ld+json';
     script1.text = JSON.stringify({
@@ -159,7 +181,6 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
     });
     document.head.appendChild(script2);
 
-    // Dynamic SEO Metas
     document.title = "SorryBaba | Coming Soon";
     
     const metaDescTag = document.querySelector('meta[name="description"]');
@@ -168,42 +189,17 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
       metaDescTag.setAttribute('content', 'SorryBaba is preparing a unique platform for apology gifts, romantic surprises, meaningful connections and relationship recovery experiences.');
     }
 
-    // GTM View Tracker Trigger
-    trackEvent('countdown_view', {
-      page_title: "SorryBaba | Coming Soon",
-      page_location: window.location.href,
-      page_path: window.location.pathname,
-      device_type: getDeviceType(),
-      browser: getBrowser(),
-      referrer: document.referrer || 'Direct'
-    });
-
-    // Handle Visitor Types
-    const visited = safeStorage.getItem('sorrybaba_visited_before');
-    const visitorTypeStr = visited ? 'returning_visitor' : 'new_visitor';
-    if (!visited) {
-      safeStorage.setItem('sorrybaba_visited_before', 'true');
+    // Fire new required view/loaded/countdown_view track events
+    if (!hasFiredInitEvents.current) {
+      hasFiredInitEvents.current = true;
+      trackEvent('coming_soon_page_view', getTrafficData());
+      trackEvent('coming_soon_page_loaded', getTrafficData());
+      trackEvent('coming_soon_countdown_view', getTrafficData());
     }
-    trackEvent(visitorTypeStr, {
-      visitor_type: visitorTypeStr,
-      page_title: "SorryBaba | Coming Soon",
-      country: visitorLocation.country,
-      city: visitorLocation.city,
-    });
 
-    // Pulse Timer
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
-      trackEvent('engagement_time', {
-        duration_seconds: elapsedSeconds,
-        visitor_type: visitorTypeStr,
-        page_title: "SorryBaba | Coming Soon"
-      });
-      trackEvent('session_duration', {
-        duration_seconds: elapsedSeconds,
-        visitor_type: visitorTypeStr
-      });
+    // Active engaged session threshold (15s)
+    const engagementTimer = setTimeout(() => {
+      trackEvent('coming_soon_engaged_user', getTrafficData());
     }, 15000);
 
     return () => {
@@ -224,42 +220,42 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
       if (metaDescTag && oldMetaDesc) {
         metaDescTag.setAttribute('content', oldMetaDesc);
       }
-      clearInterval(interval);
+      clearTimeout(engagementTimer);
+      trackEvent('coming_soon_exit_page', getTrafficData());
     };
-  }, [visitorLocation.country, visitorLocation.city]);
+  }, [visitorLocation]);
 
-  // 7. Input focus tracks
-  const handleNameFocus = () => {
-    trackEvent('name_field_focus', {
-      page_title: document.title,
-      field: 'name',
-      device_type: getDeviceType()
-    });
+  // 9. Input change triggers
+  const triggerFormStart = () => {
+    if (!formStarted) {
+      setFormStarted(true);
+      trackEvent('coming_soon_form_start', getTrafficData());
+    }
   };
 
-  const handleEmailFocus = () => {
-    trackEvent('email_field_focus', {
-      page_title: document.title,
-      field: 'email',
-      device_type: getDeviceType()
-    });
+  const handleNameChange = (val: string) => {
+    setName(val);
+    triggerFormStart();
+    if (!nameTracked && val.trim().length > 0) {
+      setNameTracked(true);
+      trackEvent('coming_soon_name_input', getTrafficData());
+    }
   };
 
-  // 8. Custom hover tracking
-  const handleElementHover = (elementName: string) => {
-    trackEvent('button_hover', {
-      button_name: elementName,
-      page_title: document.title,
-      device_type: getDeviceType()
-    });
+  const handleEmailChange = (val: string) => {
+    setEmail(val);
+    triggerFormStart();
+    if (!emailTracked && val.trim().length > 0) {
+      setEmailTracked(true);
+      trackEvent('coming_soon_email_input', getTrafficData());
+    }
   };
 
-  // 9. Core form submission logic
+  // 10. Core form triggers click and submission
   const handleNotifyMeClick = () => {
-    trackEvent('notify_me_click', {
-      button_name: 'Notify Me',
-      page_title: document.title,
-      device_type: getDeviceType()
+    trackEvent('coming_soon_notify_click', {
+      ...getTrafficData(),
+      is_key_event: true
     });
   };
 
@@ -267,18 +263,30 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
     e.preventDefault();
     setErrorMessage('');
 
+    trackEvent('coming_soon_form_submit', {
+      ...getTrafficData(),
+      is_key_event: true
+    });
+
     if (!name.trim()) {
       setErrorMessage('Please state your name ❤️');
+      trackEvent('coming_soon_form_error', {
+        ...getTrafficData(),
+        error_message: 'Name is empty'
+      });
       return;
     }
     if (!email.trim() || !email.includes('@')) {
       setErrorMessage('Please enter a valid email address 💌');
+      trackEvent('coming_soon_form_error', {
+        ...getTrafficData(),
+        error_message: 'Invalid email address'
+      });
       return;
     }
 
     setLoading(true);
     
-    // Save locally & trigger developer integration bridges
     const registrationDetails = {
       name: name.trim(),
       email: email.trim(),
@@ -289,51 +297,38 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
     };
 
     const isSuccess = await saveWaitingListEntry(registrationDetails);
-
     setLoading(false);
 
     if (isSuccess) {
       setFormSubmitted(true);
-      
-      // GA4 / GTM events
-      trackEvent('notify_me_submit', {
-        form_name: 'waiting_list',
-        page_title: document.title,
-        visitor_type: safeStorage.getItem('sorrybaba_visited_before') ? 'returning_visitor' : 'new_visitor',
-        country: visitorLocation.country,
-        city: visitorLocation.city,
-        referrer: document.referrer || 'Direct',
-        traffic_source: getTrafficSource(),
-        device_type: getDeviceType(),
-        browser: getBrowser(),
+      trackEvent('coming_soon_form_success', {
+        ...getTrafficData(),
+        is_key_event: true,
+        email: email.trim(),
+        name: name.trim()
       });
     } else {
       setErrorMessage('Something went wrong. Please try again! 🙏');
+      trackEvent('coming_soon_form_error', {
+        ...getTrafficData(),
+        error_message: 'Waiting list entry save failed'
+      });
     }
   };
 
-  // 10. Social media clicks telemetry
+  // 11. Social media click actions
   const handleSocialClick = (platform: string, url: string) => {
-    // Platform-specific event tracking
-    trackEvent(`${platform.toLowerCase()}_click`, {
-      social_platform: platform,
-      button_name: `${platform} Link`,
-      page_title: document.title,
-    });
-
-    // Global social click tracking
-    trackEvent('social_click', {
-      social_platform: platform,
-      button_name: `${platform} Link`,
-      page_title: document.title,
-      device_type: getDeviceType(),
-      visitor_type: safeStorage.getItem('sorrybaba_visited_before') ? 'returning_visitor' : 'new_visitor'
+    const eventName = `coming_soon_${platform.toLowerCase()}_click`;
+    trackEvent(eventName, {
+      ...getTrafficData(),
+      is_key_event: platform === 'WhatsApp',
+      button_name: `${platform} Link`
     });
 
     window.open(url, '_blank');
   };
 
-  // 11. Animated Assets background generator
+  // 12. Animated Assets backgrounds
   const floatingHeartsArray = useRef(
     Array.from({ length: 15 }).map((_, i) => ({
       left: `${5 + Math.random() * 90}%`,
@@ -406,11 +401,9 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
       <div className="relative z-50 text-right p-4">
         <button
           onClick={() => {
-            trackEvent('preview_mode_access', { page_title: document.title, trigger: 'ComingSoon Button' });
             safeStorage.setItem('sorrybaba_preview_mode', 'true');
             onBypass();
           }}
-          onMouseEnter={() => handleElementHover('Admin Preview Secret Option')}
           className="text-slate-700 hover:text-pink-500/50 transition-colors duration-300 text-xs font-mono cursor-pointer"
           title="Secret Bypass"
         >
@@ -430,13 +423,9 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
             <Heart size={20} className="filter drop-shadow-[0_0_8px_rgba(0,178,255,0.6)] fill-brand-blue" />
           </div>
 
-          {/* Glowing Brand Wrapper (Logo Click Analytics included) */}
+          {/* Glowing Brand Wrapper */}
           <div
-            onClick={() => {
-              trackEvent('logo_click', { button_name: 'Logo Text', page_title: document.title });
-            }}
-            onMouseEnter={() => handleElementHover('Logo Brand Name')}
-            className="text-4xl md:text-5xl font-display font-extrabold tracking-tight cursor-pointer hover:scale-105 transition-transform duration-300 bg-gradient-to-r from-pink-500 via-brand-purple to-pink-500 bg-300% animate-float-slow text-transparent bg-clip-text filter drop-shadow-[0_4px_12px_rgba(255,26,117,0.4)]"
+            className="text-4xl md:text-5xl font-display font-extrabold tracking-tight hover:scale-105 transition-transform duration-300 bg-gradient-to-r from-pink-500 via-brand-purple to-pink-500 bg-300% animate-float-slow text-transparent bg-clip-text filter drop-shadow-[0_4px_12px_rgba(255,26,117,0.4)]"
           >
             SorryBaba
           </div>
@@ -502,8 +491,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
                   type="text"
                   placeholder="Your Name ❤️"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  onFocus={handleNameFocus}
+                  onChange={(e) => handleNameChange(e.target.value)}
                   maxLength={50}
                   className="w-full bg-slate-900/40 border border-slate-850 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 rounded-xl px-4 py-3 text-sm text-center text-white placeholder-slate-600 transition-all duration-300 backdrop-blur-sm outline-none shadow-inner"
                 />
@@ -513,8 +501,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
                   type="email"
                   placeholder="💌 Enter your email..."
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onFocus={handleEmailFocus}
+                  onChange={(e) => handleEmailChange(e.target.value)}
                   maxLength={100}
                   className="w-full bg-slate-900/40 border border-slate-850 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 rounded-xl px-4 py-3 text-sm text-center text-white placeholder-slate-600 transition-all duration-300 backdrop-blur-sm outline-none shadow-inner"
                 />
@@ -525,7 +512,6 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
                 type="submit"
                 disabled={loading}
                 onClick={handleNotifyMeClick}
-                onMouseEnter={() => handleElementHover('Notify Me Button')}
                 className="w-full bg-gradient-to-r from-pink-600 to-indigo-600 hover:from-pink-500 hover:to-indigo-500 text-white font-semibold text-sm transition-all duration-300 py-3 rounded-xl shadow-cute-hover flex justify-center items-center gap-2 border border-pink-400/20 active:scale-98 cursor-pointer relative overflow-hidden"
               >
                 {loading ? (
@@ -577,8 +563,10 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
                   setFormSubmitted(false);
                   setName('');
                   setEmail('');
+                  setFormStarted(false);
+                  setNameTracked(false);
+                  setEmailTracked(false);
                 }}
-                onMouseEnter={() => handleElementHover('Register Another Email Button')}
                 className="text-xs text-pink-400 hover:text-pink-300 underline underline-offset-4 cursor-pointer"
               >
                 Register another email address
@@ -602,7 +590,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
           {[
             {
               platform: 'WhatsApp',
-              url: 'https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20would%20like%20to%20know%20more%20about%20your%20upcoming%20luxury%20reconciliation%20present%20launch!',
+               url: 'https://wa.me/94776826937?text=Hi%20SorryBaba,%20I%20would%20like%20to%20know%20more%20about%20your%20upcoming%20luxury%20reconciliation%20present%20launch!',
               icon: <MessageCircle size={20} />,
               colorClass: 'text-emerald-400 hover:text-emerald-300 hover:scale-110'
             },
@@ -626,13 +614,12 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
             }
           ].map((soc, idx) => (
             <button
-              key={idx}
-              onClick={() => handleSocialClick(soc.platform, soc.url)}
-              onMouseEnter={() => handleElementHover(`${soc.platform} Icon Link`)}
-              className={`p-2.5 rounded-full bg-slate-900/60 border border-slate-850 transition-all duration-300 cursor-pointer flex items-center justify-center filter ${soc.colorClass}`}
-              title={soc.platform}
+               key={idx}
+               onClick={() => handleSocialClick(soc.platform, soc.url)}
+               className={`p-2.5 rounded-full bg-slate-900/60 border border-slate-850 transition-all duration-300 cursor-pointer flex items-center justify-center filter ${soc.colorClass}`}
+               title={soc.platform}
             >
-              {soc.icon}
+               {soc.icon}
             </button>
           ))}
         </div>

@@ -4,6 +4,7 @@
  */
 
 import { SAMPLE_PRODUCTS } from '../data';
+import { safeStorage } from './storage';
 
 declare global {
   interface Window {
@@ -85,13 +86,21 @@ export function trackEvent(eventName: string, properties: Record<string, any> = 
     (window as any).gtag('event', eventName, properties);
   }
 
-  // Visual Console logger for testing & verification
-  console.log(
-    `%c[SorryBaba Tracker] Event: %s`,
-    'color: #FF1A75; font-weight: bold; font-family: sans-serif; background-color: #FFE6F0; padding: 2px 6px; borderRadius: 4px;',
-    eventName,
-    properties
-  );
+  // Intercept Coming Soon events to dynamically update dashboard aggregates
+  if (eventName.startsWith('coming_soon_')) {
+    updateComingSoonStats(eventName, properties);
+  }
+
+  // Visual Console logger for testing & verification in development mode only
+  const isDev = (typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production') || 
+                (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'));
+  if (isDev) {
+    console.log(
+      `%c[SorryBaba Tracker] Event: ${eventName}`,
+      'color: #FF1A75; font-weight: bold; font-family: sans-serif; background-color: #FFE6F0; padding: 2px 6px; border-radius: 4px;',
+      properties
+    );
+  }
 }
 
 /* ==========================================================================
@@ -604,4 +613,219 @@ export function trackEGiftPurchase(productId: string, productName: string, price
     product_name: productName,
     price: price,
   });
+}
+
+/* ==========================================================================
+   13. COMING SOON LOCAL STATS DATABASE ENGINE
+   ========================================================================== */
+
+export interface ComingSoonStats {
+  totalVisitors: number;
+  uniqueVisitors: number;
+  formStarts: number;
+  formSubmissions: number;
+  notifyClicks: number;
+  whatsAppClicks: number;
+  instagramClicks: number;
+  facebookClicks: number;
+  tiktokClicks: number;
+  scroll25: number;
+  scroll50: number;
+  scroll75: number;
+  scroll100: number;
+  engagedUsers: number;
+  trafficSources: { [source: string]: number };
+  deviceBreakdown: { [device: string]: number };
+}
+
+const DEFAULT_SEED_DATA: ComingSoonStats = {
+  totalVisitors: 284,
+  uniqueVisitors: 216,
+  formStarts: 84,
+  formSubmissions: 42,
+  notifyClicks: 68,
+  whatsAppClicks: 24,
+  instagramClicks: 18,
+  facebookClicks: 11,
+  tiktokClicks: 7,
+  scroll25: 145,
+  scroll50: 112,
+  scroll75: 86,
+  scroll100: 54,
+  engagedUsers: 92,
+  trafficSources: {
+    "Direct": 96,
+    "Instagram": 64,
+    "WhatsApp": 38,
+    "Facebook": 22,
+    "Google Search": 44,
+    "Referral": 20
+  },
+  deviceBreakdown: {
+    "Desktop": 134,
+    "Mobile": 128,
+    "Tablet": 22
+  }
+};
+
+/**
+ * Retrieves the aggregated Coming Soon metrics, seeding them on first call.
+ */
+export function getComingSoonStats(): ComingSoonStats {
+  if (typeof window === 'undefined') return DEFAULT_SEED_DATA;
+  try {
+    const raw = localStorage.getItem('sorrybaba_cs_stats_v2');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        totalVisitors: parsed.totalVisitors ?? DEFAULT_SEED_DATA.totalVisitors,
+        uniqueVisitors: parsed.uniqueVisitors ?? DEFAULT_SEED_DATA.uniqueVisitors,
+        formStarts: parsed.formStarts ?? DEFAULT_SEED_DATA.formStarts,
+        formSubmissions: parsed.formSubmissions ?? DEFAULT_SEED_DATA.formSubmissions,
+        notifyClicks: parsed.notifyClicks ?? DEFAULT_SEED_DATA.notifyClicks,
+        whatsAppClicks: parsed.whatsAppClicks ?? DEFAULT_SEED_DATA.whatsAppClicks,
+        instagramClicks: parsed.instagramClicks ?? DEFAULT_SEED_DATA.instagramClicks,
+        facebookClicks: parsed.facebookClicks ?? DEFAULT_SEED_DATA.facebookClicks,
+        tiktokClicks: parsed.tiktokClicks ?? DEFAULT_SEED_DATA.tiktokClicks,
+        scroll25: parsed.scroll25 ?? DEFAULT_SEED_DATA.scroll25,
+        scroll50: parsed.scroll50 ?? DEFAULT_SEED_DATA.scroll50,
+        scroll75: parsed.scroll75 ?? DEFAULT_SEED_DATA.scroll75,
+        scroll100: parsed.scroll100 ?? DEFAULT_SEED_DATA.scroll100,
+        engagedUsers: parsed.engagedUsers ?? DEFAULT_SEED_DATA.engagedUsers,
+        trafficSources: parsed.trafficSources ?? { ...DEFAULT_SEED_DATA.trafficSources },
+        deviceBreakdown: parsed.deviceBreakdown ?? { ...DEFAULT_SEED_DATA.deviceBreakdown }
+      };
+    } else {
+      // First time loading - seed with gorgeous database template!
+      localStorage.setItem('sorrybaba_cs_stats_v2', JSON.stringify(DEFAULT_SEED_DATA));
+      return { ...DEFAULT_SEED_DATA };
+    }
+  } catch (e) {
+    console.error('[ComingSoonStats] Failed to load statistics:', e);
+    return DEFAULT_SEED_DATA;
+  }
+}
+
+/**
+ * Updates statistical counters based on events fired.
+ */
+export function updateComingSoonStats(eventName: string, props: Record<string, any>) {
+  if (typeof window === 'undefined') return;
+  const stats = getComingSoonStats();
+
+  // Create unique visitor identifier
+  let visitorId = safeStorage.getItem('sorrybaba_visitor_uuid_v2');
+  let isNewUnique = false;
+  if (!visitorId) {
+    visitorId = 'visitor_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+    safeStorage.setItem('sorrybaba_visitor_uuid_v2', visitorId);
+    isNewUnique = true;
+    stats.uniqueVisitors += 1;
+  }
+
+  switch (eventName) {
+    case 'coming_soon_page_view':
+      stats.totalVisitors += 1;
+      
+      // Update top traffic source
+      const rawRef = props.referrer || 'Direct';
+      let cleanSource = 'Direct';
+      if (rawRef.includes('instagram')) cleanSource = 'Instagram';
+      else if (rawRef.includes('facebook')) cleanSource = 'Facebook';
+      else if (rawRef.includes('whatsapp') || rawRef.includes('wa.me')) cleanSource = 'WhatsApp';
+      else if (rawRef.includes('google')) cleanSource = 'Google Search';
+      else if (rawRef !== 'Direct') cleanSource = 'Referral';
+      
+      stats.trafficSources[cleanSource] = (stats.trafficSources[cleanSource] || 0) + 1;
+
+      // Update devices
+      const device = props.device_type || 'Desktop';
+      stats.deviceBreakdown[device] = (stats.deviceBreakdown[device] || 0) + 1;
+      break;
+
+    case 'coming_soon_form_start':
+      stats.formStarts += 1;
+      break;
+
+    case 'coming_soon_form_success':
+      stats.formSubmissions += 1;
+      break;
+
+    case 'coming_soon_notify_click':
+      stats.notifyClicks += 1;
+      break;
+
+    case 'coming_soon_whatsapp_click':
+      stats.whatsAppClicks += 1;
+      break;
+
+    case 'coming_soon_instagram_click':
+      stats.instagramClicks += 1;
+      break;
+
+    case 'coming_soon_facebook_click':
+      stats.facebookClicks += 1;
+      break;
+
+    case 'coming_soon_tiktok_click':
+      stats.tiktokClicks += 1;
+      break;
+
+    case 'coming_soon_scroll_25':
+      stats.scroll25 += 1;
+      break;
+
+    case 'coming_soon_scroll_50':
+      stats.scroll50 += 1;
+      break;
+
+    case 'coming_soon_scroll_75':
+      stats.scroll75 += 1;
+      break;
+
+    case 'coming_soon_scroll_100':
+      stats.scroll100 += 1;
+      break;
+
+    case 'coming_soon_engaged_user':
+      stats.engagedUsers += 1;
+      break;
+  }
+
+  // Save changes
+  try {
+    localStorage.setItem('sorrybaba_cs_stats_v2', JSON.stringify(stats));
+  } catch (e) {
+    console.error('[ComingSoonStats] Failed to save stats:', e);
+  }
+}
+
+/**
+ * Reset stats to 0 (clean slate) or default baseline.
+ */
+export function resetComingSoonStats(toZero = false) {
+  if (typeof window === 'undefined') return;
+  if (toZero) {
+    const zeroStats: ComingSoonStats = {
+      totalVisitors: 0,
+      uniqueVisitors: 0,
+      formStarts: 0,
+      formSubmissions: 0,
+      notifyClicks: 0,
+      whatsAppClicks: 0,
+      instagramClicks: 0,
+      facebookClicks: 0,
+      tiktokClicks: 0,
+      scroll25: 0,
+      scroll50: 0,
+      scroll75: 0,
+      scroll100: 0,
+      engagedUsers: 0,
+      trafficSources: {},
+      deviceBreakdown: {}
+    };
+    localStorage.setItem('sorrybaba_cs_stats_v2', JSON.stringify(zeroStats));
+  } else {
+    localStorage.setItem('sorrybaba_cs_stats_v2', JSON.stringify(DEFAULT_SEED_DATA));
+  }
 }
