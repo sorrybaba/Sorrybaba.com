@@ -48,7 +48,8 @@ const RouteTracker: React.FC = () => {
 // Layout wrap containing custom standalone routing views
 const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: boolean) => void }> = ({ isPreviewActive, setIsPreviewActive }) => {
   const { pathname } = useLocation();
-  const isComingSoonPage = pathname === '/coming-soon' || (pathname === '/' && SITE_MODE === 'coming_soon' && !isPreviewActive);
+  const normalizedPath = pathname.toLowerCase().replace(/\/$/, "");
+  const isComingSoonPage = normalizedPath === '/coming-soon' || (pathname === '/' && SITE_MODE === 'coming_soon' && !isPreviewActive);
   const showGlobalLayout = !isComingSoonPage;
 
   return (
@@ -68,6 +69,7 @@ const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: 
             )
           } />
           <Route path="/coming-soon" element={<ComingSoon onBypass={() => setIsPreviewActive(true)} />} />
+          <Route path="/coming-soon/" element={<ComingSoon onBypass={() => setIsPreviewActive(true)} />} />
           <Route path="/wife-husband-gifts" element={<WifeHusband />} />
           <Route path="/girlfriend-boyfriend-gifts" element={<GirlfriendBoyfriend />} />
           <Route path="/other-gifts" element={<OtherGifts />} />

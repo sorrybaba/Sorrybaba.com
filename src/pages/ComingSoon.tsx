@@ -207,8 +207,20 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
     }, 15000);
 
     return () => {
-      document.head.removeChild(script1);
-      document.head.removeChild(script2);
+      try {
+        if (script1 && document.head.contains(script1)) {
+          document.head.removeChild(script1);
+        }
+      } catch (e) {
+        console.warn('[ComingSoon] Failed to clean up script1:', e);
+      }
+      try {
+        if (script2 && document.head.contains(script2)) {
+          document.head.removeChild(script2);
+        }
+      } catch (e) {
+        console.warn('[ComingSoon] Failed to clean up script2:', e);
+      }
       if (metaDescTag && oldMetaDesc) {
         metaDescTag.setAttribute('content', oldMetaDesc);
       }
