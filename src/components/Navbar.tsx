@@ -70,8 +70,8 @@ export const Navbar: React.FC = () => {
             <Link to="/" className="hover:text-brand-pink transition-colors">Home</Link>
             <Link to="/wife-husband-gifts" className="hover:text-brand-pink transition-colors">Wife & Husband</Link>
             <Link to="/girlfriend-boyfriend-gifts" className="hover:text-brand-pink transition-colors">Girlfriend & Boyfriend</Link>
-            <Link to="/other-gifts" className="hover:text-brand-pink transition-colors font-medium">Other Gifts</Link>
-            <Link to="/all-products" className="hover:text-brand-pink transition-colors">All Products</Link>
+            <Link to="/collections" className="hover:text-brand-pink transition-colors">Collections</Link>
+            <Link to="/blog" className="hover:text-brand-pink transition-colors text-gray-650 font-medium">Blog</Link>
             <Link to="/faq" className="hover:text-brand-pink transition-colors text-gray-500 font-normal">FAQ</Link>
           </nav>
 
@@ -175,8 +175,8 @@ export const Navbar: React.FC = () => {
               <Link to="/" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 hover:text-brand-pink transition-all" onClick={closeMobileMenu}>Home</Link>
               <Link to="/wife-husband-gifts" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 hover:text-brand-pink transition-all" onClick={closeMobileMenu}>Wife & Husband Gifts</Link>
               <Link to="/girlfriend-boyfriend-gifts" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 hover:text-brand-pink transition-all" onClick={closeMobileMenu}>Girlfriend & Boyfriend Gifts</Link>
-              <Link to="/other-gifts" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 hover:text-brand-pink transition-all" onClick={closeMobileMenu}>Other Warm Gifts</Link>
-              <Link to="/all-products" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 hover:text-brand-pink transition-all" onClick={closeMobileMenu}>Explore All Products</Link>
+              <Link to="/collections" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 hover:text-brand-pink transition-all" onClick={closeMobileMenu}>Curated Collections</Link>
+              <Link to="/blog" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 hover:text-brand-pink transition-all" onClick={closeMobileMenu}>Relationship Blog</Link>
               <Link to="/faq" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 text-gray-500 font-normal transition-all" onClick={closeMobileMenu}>Frequently Asked Questions (FAQ)</Link>
               <Link to="/contact-us" className="p-2.5 rounded-xl hover:bg-brand-pink-soft/20 text-gray-500 font-normal transition-all" onClick={closeMobileMenu}>Contact Support</Link>
             </nav>

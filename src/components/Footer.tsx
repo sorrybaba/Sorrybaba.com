@@ -132,7 +132,7 @@ export const Footer: React.FC = () => {
 
           {/* Column 2: Quick Links */}
           <div>
-            <h5 className="font-display font-bold text-gray-800 text-sm mb-4">Reconciliation Categories</h5>
+            <h5 className="font-display font-bold text-gray-800 text-sm mb-4">Reconciliation Catalog</h5>
             <ul className="space-y-2.5 text-xs">
               <li>
                 <Link to="/wife-husband-gifts" className="hover:text-brand-pink transition-colors">Wife & Husband Gifts</Link>
@@ -141,29 +141,41 @@ export const Footer: React.FC = () => {
                 <Link to="/girlfriend-boyfriend-gifts" className="hover:text-brand-pink transition-colors">Girlfriend & Boyfriend Gifts</Link>
               </li>
               <li>
-                <Link to="/other-gifts" className="hover:text-brand-pink transition-colors font-medium text-gray-600">Other Warm Presents</Link>
+                <Link to="/collections" className="hover:text-brand-pink transition-colors font-medium">Curated Collections</Link>
               </li>
               <li>
-                <Link to="/all-products" className="hover:text-brand-pink transition-colors">Explore All Gifts Inventory</Link>
+                <Link to="/all-products" className="hover:text-brand-pink transition-colors font-semibold text-brand-pink">Explore All Gifts (Inventory)</Link>
+              </li>
+              <li>
+                <Link to="/blog" className="hover:text-brand-pink transition-colors font-medium text-gray-600">Reconciliation Blog & Tips</Link>
               </li>
             </ul>
           </div>
 
           {/* Column 3: Trust & Legal */}
           <div>
-            <h5 className="font-display font-bold text-gray-800 text-sm mb-4">Trust & Policies</h5>
+            <h5 className="font-display font-bold text-gray-800 text-sm mb-4">SorryBaba Trust & Help</h5>
             <ul className="space-y-2.5 text-xs">
               <li>
-                <Link to="/faq" className="hover:text-brand-pink transition-colors">Frequently Asked Questions (FAQ)</Link>
+                <Link to="/about" className="hover:text-brand-pink transition-colors">Our Story & Vision</Link>
               </li>
               <li>
-                <Link to="/privacy-policy" className="hover:text-brand-pink transition-colors">Privacy Policy</Link>
+                <Link to="/how-it-works" className="hover:text-brand-pink transition-colors">How SorryBaba Works</Link>
               </li>
               <li>
-                <Link to="/terms-conditions" className="hover:text-brand-pink transition-colors">Terms of Service</Link>
+                <Link to="/faq" className="hover:text-brand-pink transition-colors">Frequently Questions (FAQ)</Link>
               </li>
               <li>
-                <Link to="/contact-us" className="hover:text-brand-pink transition-colors">Contact and Support Centre</Link>
+                <Link to="/contact" className="hover:text-brand-pink transition-colors">Contact Support Centre</Link>
+              </li>
+              <li>
+                <Link to="/legal/privacy-policy" className="hover:text-brand-pink transition-colors">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link to="/legal/refund-policy" className="hover:text-brand-pink transition-colors">Refund & Cancellation</Link>
+              </li>
+              <li>
+                <Link to="/legal/cookie-policy" className="hover:text-brand-pink transition-colors">Cookie Policy</Link>
               </li>
             </ul>
           </div>

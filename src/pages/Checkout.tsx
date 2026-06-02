@@ -126,15 +126,25 @@ ${paymentMethod.toUpperCase()}`;
     trackCheckoutSubmit(city || 'General', paymentMethod, cartGrandTotal, cart.length);
     trackWhatsAppOrderStarted(cartGrandTotal, cart.length, paymentMethod);
 
-    // Formulate final URL block
-    const whatsAppEncodedUrl = `https://wa.me/94776826937?text=${encodeURIComponent(whatsAppMessageText)}`;
+    const pendingOrder = {
+      fullName,
+      phone,
+      whatsApp,
+      address,
+      city,
+      province,
+      email,
+      giftMessage,
+      grandTotal: `LKR ${cartGrandTotal.toLocaleString()}`,
+      paymentMethod,
+      productsSummary: productsSummaryList
+    };
 
     // Clear cart context to reset variables
     clearCart();
 
-    // Trigger open and navigate inside browser frames
-    window.open(whatsAppEncodedUrl, '_blank');
-    navigate('/success');
+    // Navigate to payment processing details
+    navigate('/checkout/payment', { state: { order: pendingOrder } });
   };
 
   return (

@@ -31,6 +31,16 @@ import { ContactUs } from './pages/ContactUs';
 import { FAQ } from './pages/FAQ';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsConditions } from './pages/TermsConditions';
+import { About } from './pages/About';
+import { HowItWorks } from './pages/HowItWorks';
+import { Blog } from './pages/Blog';
+import { BlogPost } from './pages/BlogPost';
+import { RefundPolicy } from './pages/RefundPolicy';
+import { CookiePolicy } from './pages/CookiePolicy';
+import { Collections } from './pages/Collections';
+import { AccountPage } from './pages/AccountPage';
+import { MarketingPages } from './pages/MarketingPages';
+import { PaymentPage } from './pages/PaymentPage';
 import ComingSoonAnalyticsDashboard from './pages/ComingSoonAnalytics';
 
 // Reusable route tracking listener & scroll-to-top on route navigation
@@ -85,6 +95,81 @@ const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: 
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-conditions" element={<TermsConditions />} />
+
+          {/* New Expanded Public Pages */}
+          <Route path="/about" element={<About />} />
+          <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/legal/terms-and-conditions" element={<TermsConditions />} />
+          <Route path="/legal/refund-policy" element={<RefundPolicy />} />
+          <Route path="/legal/cookie-policy" element={<CookiePolicy />} />
+
+          {/* Expanded Product & Collections Routing */}
+          <Route path="/products" element={<AllProducts />} />
+          <Route path="/products/apology-gifts" element={<WifeHusband />} />
+          <Route path="/products/surprise-gifts" element={<GirlfriendBoyfriend />} />
+          <Route path="/products/romantic-gifts" element={<OtherGifts />} />
+          <Route path="/products/friendship-gifts" element={<EGifts />} />
+          <Route path="/products/custom-gifts" element={<AllProducts />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/collections" element={<Collections />} />
+          <Route path="/collections/:slug" element={<Collections />} />
+
+          {/* checkout expansion paths */}
+          <Route path="/checkout/payment" element={<PaymentPage />} />
+          <Route path="/checkout/success" element={<Success />} />
+
+          {/* Account dynamic layout tabs */}
+          <Route path="/account" element={<AccountPage />} />
+          <Route path="/account/orders" element={<AccountPage />} />
+          <Route path="/account/profile" element={<AccountPage />} />
+          <Route path="/account/wishlist" element={<AccountPage />} />
+          <Route path="/account/settings" element={<AccountPage />} />
+
+          {/* Marketing Campaign URLs */}
+          <Route path="/waitlist" element={<MarketingPages />} />
+          <Route path="/launch-notification" element={<MarketingPages />} />
+          <Route path="/special-offers" element={<MarketingPages />} />
+          <Route path="/referral-program" element={<MarketingPages />} />
+
+          {/* Multilingual Structure Expansion Placeholder Wrapper (si/en/ta) */}
+          <Route path="/:lang" element={<Home />} />
+          <Route path="/:lang/about" element={<About />} />
+          <Route path="/:lang/how-it-works" element={<HowItWorks />} />
+          <Route path="/:lang/contact" element={<ContactUs />} />
+          <Route path="/:lang/contact-us" element={<ContactUs />} />
+          <Route path="/:lang/faq" element={<FAQ />} />
+          <Route path="/:lang/blog" element={<Blog />} />
+          <Route path="/:lang/blog/:slug" element={<BlogPost />} />
+          <Route path="/:lang/legal/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/:lang/legal/terms-and-conditions" element={<TermsConditions />} />
+          <Route path="/:lang/legal/refund-policy" element={<RefundPolicy />} />
+          <Route path="/:lang/legal/cookie-policy" element={<CookiePolicy />} />
+          <Route path="/:lang/products" element={<AllProducts />} />
+          <Route path="/:lang/products/apology-gifts" element={<WifeHusband />} />
+          <Route path="/:lang/products/surprise-gifts" element={<GirlfriendBoyfriend />} />
+          <Route path="/:lang/products/romantic-gifts" element={<OtherGifts />} />
+          <Route path="/:lang/products/friendship-gifts" element={<EGifts />} />
+          <Route path="/:lang/products/custom-gifts" element={<AllProducts />} />
+          <Route path="/:lang/products/:id" element={<ProductDetails />} />
+          <Route path="/:lang/collections" element={<Collections />} />
+          <Route path="/:lang/collections/:slug" element={<Collections />} />
+          <Route path="/:lang/checkout" element={<Checkout />} />
+          <Route path="/:lang/checkout/payment" element={<PaymentPage />} />
+          <Route path="/:lang/checkout/success" element={<Success />} />
+          <Route path="/:lang/success" element={<Success />} />
+          <Route path="/:lang/account" element={<AccountPage />} />
+          <Route path="/:lang/account/orders" element={<AccountPage />} />
+          <Route path="/:lang/account/profile" element={<AccountPage />} />
+          <Route path="/:lang/account/wishlist" element={<AccountPage />} />
+          <Route path="/:lang/account/settings" element={<AccountPage />} />
+          <Route path="/:lang/waitlist" element={<MarketingPages />} />
+          <Route path="/:lang/launch-notification" element={<MarketingPages />} />
+          <Route path="/:lang/special-offers" element={<MarketingPages />} />
+          <Route path="/:lang/referral-program" element={<MarketingPages />} />
           
           {/* Fallback route */}
           <Route path="*" element={<Home />} />
