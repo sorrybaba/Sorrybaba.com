@@ -6,6 +6,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, BadgeCheck, PhoneCall, HelpCircle } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import { trackPageView, trackWhatsAppOrderSent } from '../lib/analytics';
 
 export const Success: React.FC = () => {
@@ -15,6 +16,10 @@ export const Success: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto text-center py-12 md:py-16 space-y-8 bg-white border border-brand-pink-soft/30 rounded-3xl p-8 shadow-cute">
+      <SEO 
+        title="Order Success! | Thank You - SorryBaba.com" 
+        description="Your reconciliation message and order details have been successfully transmitted. Our customer success team is processing your delivery parameters right now." 
+      />
       
       {/* Mascot circular bouncing visual */}
       <div className="w-24 h-24 rounded-full overflow-hidden border border-brand-pink-soft bg-brand-pink-soft/20 flex items-center justify-center mx-auto animate-bounce shadow-md">

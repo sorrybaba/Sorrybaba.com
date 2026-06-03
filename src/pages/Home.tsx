@@ -10,6 +10,7 @@ import { CategoryCards } from '../components/CategoryCards';
 import { SAMPLE_PRODUCTS } from '../data';
 import { useApp } from '../context/AppContext';
 import { Heart, Sparkles, Send, ShieldAlert, BadgeCheck, MessageCircleHeart } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackProductClick,
   trackSelectItem,
@@ -64,6 +65,10 @@ export const Home: React.FC = () => {
 
   return (
     <div className="space-y-16">
+      <SEO 
+        title="SorryBaba.com | Cute Apology Gifts, Romantic Gifts & Reconciliation Presents" 
+        description="Shop apology gifts, romantic gifts, reconciliation presents, custom keepsakes, surprise gift boxes and heartfelt apology cards from SorryBaba.com." 
+      />
       
       {/* 1. EMOTIONAL HERO SECTION */}
       <section className="relative overflow-hidden pt-12 md:pt-20 pb-16 bg-gradient-to-b from-brand-pink-soft/20 via-white to-brand-bg/50">

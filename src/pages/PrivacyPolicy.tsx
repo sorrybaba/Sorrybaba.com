@@ -6,6 +6,7 @@
 import React, { useEffect } from 'react';
 import { ShieldCheck, Eye, Lock, FileKey } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
+import { SEO } from '../components/SEO';
 
 export const PrivacyPolicy: React.FC = () => {
   useEffect(() => {
@@ -14,6 +15,10 @@ export const PrivacyPolicy: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-16">
+      <SEO 
+        title="Privacy Policy & Security Guarantee | SorryBaba.com" 
+        description="Learn how we protect and encrypt your private apology records, personalized letters, delivery details, and order transactions under maximum privacy protocols." 
+      />
       
       {/* Title */}
       <div className="text-center space-y-2">

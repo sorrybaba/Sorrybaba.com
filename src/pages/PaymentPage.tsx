@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Landmark, Wallet, PhoneCall, ArrowRight, ShieldCheck, ClipboardCheck } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import { trackPageView, trackEvent, trackWhatsAppOrderSent, trackWhatsAppOrderMessageGenerated } from '../lib/analytics';
 
 export const PaymentPage: React.FC = () => {
@@ -74,6 +75,10 @@ ${(order.paymentMethod || 'whatsapp').toUpperCase()}`;
 
   return (
     <div className="max-w-2xl mx-auto py-4 font-sans selection:bg-brand-pink-soft selection:text-brand-pink text-gray-700">
+      <SEO 
+        title="Complete Your Apology Payment | SorryBaba.com" 
+        description="Proceed with your bank transfer or cash-on-delivery validation, and trigger the WhatsApp automated delivery dispatcher instantly to ensure zero dispatch delay." 
+      />
       
       {/* Title */}
       <section className="text-center space-y-2 mb-8">

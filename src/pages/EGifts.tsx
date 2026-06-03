@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Sparkles, ArrowRight, Heart, Music, Smartphone, User, FileText, Send, CheckCircle } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackProductView,
   trackAddToCart,
@@ -78,6 +79,10 @@ export const EGifts: React.FC = () => {
 
   return (
     <div className="space-y-12">
+      <SEO 
+        title="Interactive E-Gifts & Virtual Apology Cards | SorryBaba.com" 
+        description="Send customized digital apology experiences, virtual cards, flower bouquets, and personalized soundtracks. Delivered directly to your partner via WhatsApp or email." 
+      />
       
       {/* Page header */}
       <section className="text-center max-w-2xl mx-auto space-y-3">

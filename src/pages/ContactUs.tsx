@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Mail, Clock, Phone, MapPin, Send, HelpCircle } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackPageView,
   trackContactFormSubmit,
@@ -40,6 +41,10 @@ export const ContactUs: React.FC = () => {
 
   return (
     <div className="space-y-12 pb-16">
+      <SEO 
+        title="Contact Us & Live Support Concierge | SorryBaba.com" 
+        description="Connect with our 24/7 Live Support Concierge. Ask questions about custom items, custom schedules, and delivery logistics, or get custom letter recommendations." 
+      />
       
       {/* Page header */}
       <section className="text-center max-w-xl mx-auto space-y-3">

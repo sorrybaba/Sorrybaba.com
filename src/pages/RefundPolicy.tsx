@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { RefreshCcw, Landmark, Truck, ShieldCheck } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
+import { SEO } from '../components/SEO';
 
 export const RefundPolicy: React.FC = () => {
   useEffect(() => {
@@ -9,6 +10,10 @@ export const RefundPolicy: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-16 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title="Refund & Cancellation Policy | SorryBaba.com" 
+        description="Learn about our fair refund terms, cancellation rules under custom schedules, physical delivery adjustments, and quality assurance guidelines." 
+      />
       
       {/* Title */}
       <div className="text-center space-y-2">

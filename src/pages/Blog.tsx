@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Calendar, ArrowRight, User, Hash } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
+import { SEO } from '../components/SEO';
 
 export interface BlogArticle {
   slug: string;
@@ -85,6 +86,10 @@ export const Blog: React.FC = () => {
 
   return (
     <div className="space-y-12 py-4 md:py-8 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title="Relationship Advice & Reconciliation Blog | SorryBaba.com" 
+        description="Read our expert guides, romantic ideas, and relationship reconciliation columns. Learn how to apologize sincerely, mend bedroom silences, and choose sweet matching gifts." 
+      />
       {/* Blog Hero Header */}
       <section className="text-center max-w-xl mx-auto space-y-3">
         <span className="text-[10px] font-mono font-bold tracking-widest text-[#FF1A75] uppercase bg-brand-pink-soft/20 px-3 py-1 rounded-full">

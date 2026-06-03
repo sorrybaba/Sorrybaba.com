@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ShieldCheck, Info, Sparkles, CheckCircle2 } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
+import { SEO } from '../components/SEO';
 
 export const CookiePolicy: React.FC = () => {
   useEffect(() => {
@@ -9,6 +10,10 @@ export const CookiePolicy: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-16 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title="Cookie & Client Storage Policy | SorryBaba.com" 
+        description="Review how SorryBaba uses state containers, cookies, local database indices, and session tracking logs to support anonymous cart persistence safely." 
+      />
       
       {/* Title */}
       <div className="text-center space-y-2">

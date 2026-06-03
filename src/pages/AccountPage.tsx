@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { User, ClipboardList, Heart, Settings, LayoutDashboard, ShieldCheck, Mail, Key, Sparkles, MapPin, Smile } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import { trackPageView } from '../lib/analytics';
 
 export const AccountPage: React.FC = () => {
@@ -55,6 +56,10 @@ export const AccountPage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto py-4 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title="My Account Dashboard | SorryBaba.com" 
+        description="Access and track your relationship gift orders, pending customized greeting letters, historical purchases, and recipient address setups." 
+      />
       
       {/* Title */}
       <section className="space-y-2 pb-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4">

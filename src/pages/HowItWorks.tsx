@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Gift, FileText, ArrowRight, RefreshCw, Send, CheckCircle2 } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
 import { Link } from 'react-router-dom';
+import { SEO } from '../components/SEO';
 
 export const HowItWorks: React.FC = () => {
   useEffect(() => {
@@ -37,6 +38,10 @@ export const HowItWorks: React.FC = () => {
 
   return (
     <div className="space-y-16 py-4 md:py-8 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title="How It Works | SorryBaba.com - Interactive Reconciliation Flow" 
+        description="Understand our seamless apology fulfillment system. Send instant digital e-gifts, premium custom physical keepsakes, and personalized messages designed specifically to ask for forgiveness." 
+      />
       {/* Decorative Title Header */}
       <section className="text-center max-w-xl mx-auto space-y-4">
         <span className="text-[10px] font-mono font-bold tracking-widest text-[#FF1A75] uppercase bg-brand-pink-soft/20 px-3 py-1 rounded-full">

@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Wallet, Landmark, PhoneCall, ShieldCheck, ArrowRight, ClipboardList } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackPageView,
   trackBeginCheckout,
@@ -149,6 +150,10 @@ ${paymentMethod.toUpperCase()}`;
 
   return (
     <div className="space-y-8">
+      <SEO 
+        title="Secure Checkout | SorryBaba.com" 
+        description="Verify your shipping route, enter custom letters or messages, select your payment gateway, and finalize your emotional delivery safely." 
+      />
       
       {/* Checkout Title header */}
       <div className="space-y-1">

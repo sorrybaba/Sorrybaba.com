@@ -8,6 +8,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles, Send } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackProductClick,
   trackSelectItem,
@@ -82,6 +83,16 @@ export const GirlfriendBoyfriend: React.FC = () => {
 
   return (
     <div className="space-y-12">
+      <SEO 
+        title={isGirlfriend 
+          ? "Apology Gifts for Girlfriend | Sweet Surprises - SorryBaba.com" 
+          : "Apology Gifts for Boyfriend | Romantic Presents - SorryBaba.com"
+        } 
+        description={isGirlfriend 
+          ? "Show her how much you care. Send cute teddy bears, interactive e-gifts, virtual roses, and sweet romantic apology letters to rebuild trust with your girlfriend." 
+          : "Explore romantic apology gifts for your boyfriend. Send customized keepsakes, magnetic connection bracelets, and digital apology experiences."
+        }
+      />
       
       {/* Category Hero Block */}
       <section className={`text-center py-12 md:py-16 rounded-3xl border transition-all duration-300 relative overflow-hidden ${

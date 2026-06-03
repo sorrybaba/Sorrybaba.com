@@ -6,6 +6,7 @@
 import React, { useEffect } from 'react';
 import { ShieldAlert, BookOpen, Truck, Hammer } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
+import { SEO } from '../components/SEO';
 
 export const TermsConditions: React.FC = () => {
   useEffect(() => {
@@ -14,6 +15,10 @@ export const TermsConditions: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 pb-16">
+      <SEO 
+        title="Terms and Conditions of Service | SorryBaba.com" 
+        description="Review the legal terms of service, platform usage rules, digital e-gift parameters, physical courier guidelines, and agreement guidelines of SorryBaba.com." 
+      />
       
       {/* Title */}
       <div className="text-center space-y-2">

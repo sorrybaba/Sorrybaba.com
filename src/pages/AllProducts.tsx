@@ -9,6 +9,7 @@ import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Product } from '../types';
 import { Filter, SlidersHorizontal, Search, Star, MessageSquareCode, Archive, ShoppingBag } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackProductClick,
   trackSelectItem,
@@ -148,6 +149,10 @@ export const AllProducts: React.FC = () => {
 
   return (
     <div className="space-y-10">
+      <SEO 
+        title="Apology Gifts Collection & Reconciliation Presents | SorryBaba.com" 
+        description="Explore our catalog of apology gifts, customized keepsakes, physical teddy bears, rose gift boxes, and unique electronic e-gifts designed to restore your relationship." 
+      />
       
       {/* Catalog Header */}
       <section className="text-center max-w-xl mx-auto space-y-3">

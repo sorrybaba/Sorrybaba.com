@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Heart, Sparkles, ShieldCheck, Award, MessageCircle, ArrowRight } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
 import { Link } from 'react-router-dom';
+import { SEO } from '../components/SEO';
 
 export const About: React.FC = () => {
   useEffect(() => {
@@ -10,6 +11,10 @@ export const About: React.FC = () => {
 
   return (
     <div className="space-y-16 py-4 md:py-8 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title="About Us | SorryBaba.com - Our Journey in Mending Relationships" 
+        description="Discover the story behind SorryBaba. We are on a mission to restore connections, bridge silences, and help couples express heartfelt regret through thoughtful presents and apology cards." 
+      />
       {/* Decorative Hero Section */}
       <section className="text-center max-w-2xl mx-auto space-y-4">
         <span className="text-[10px] font-mono font-bold tracking-widest text-brand-pink uppercase bg-brand-pink-soft/20 px-3 py-1 rounded-full">

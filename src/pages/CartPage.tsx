@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { Trash2, Plus, Minus, ArrowRight, ShieldCheck, ShoppingBag } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackPageView,
   trackRemoveFromCart,
@@ -54,6 +55,10 @@ export const CartPage: React.FC = () => {
   if (cart.length === 0) {
     return (
       <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 max-w-md mx-auto shadow-xs p-8 space-y-5">
+        <SEO 
+          title="Empty Shopping Bag | SorryBaba.com" 
+          description="Your reconciliation bag is empty. Explore our collection of beautiful apology gifts and relationship packages to mend your bond today." 
+        />
         <span className="text-6xl animate-bounce">🎈</span>
         <div className="space-y-2">
           <h2 className="font-display font-black text-gray-800 text-lg">Your Greeting Bag is Empty!</h2>
@@ -73,6 +78,10 @@ export const CartPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      <SEO 
+        title="Review Your Shopping Bag | SorryBaba.com" 
+        description="Verify the apology items, custom digital cards, and hampers in your shopping bag before proceeding to our secure checkout." 
+      />
       
       {/* Title */}
       <h1 className="font-display font-black text-2xl md:text-3xl text-gray-800 tracking-tight flex items-center gap-2">

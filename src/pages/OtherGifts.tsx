@@ -8,6 +8,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackProductClick,
   trackSelectItem,
@@ -81,6 +82,16 @@ export const OtherGifts: React.FC = () => {
 
   return (
     <div className="space-y-12">
+      <SEO 
+        title={isWomen 
+          ? "Apology Gifts for Women | Sweet Remorse Presents - SorryBaba.com" 
+          : "Apology Gifts for Men | Heartfelt Reconciliation Gifts - SorryBaba.com"
+        } 
+        description={isWomen 
+          ? "Shop sweet remorse gifts and custom keepsake blocks for her. Strengthen your bond and restore intimacy." 
+          : "Explore dynamic, sweet apology gifts for men. Reach out and mend bedroom silences with custom-built romantic items."
+        }
+      />
       
       {/* Category Hero Block */}
       <section className={`text-center py-12 md:py-16 rounded-3xl border transition-all duration-300 relative overflow-hidden ${

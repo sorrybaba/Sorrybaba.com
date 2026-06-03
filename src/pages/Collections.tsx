@@ -4,6 +4,7 @@ import { SAMPLE_PRODUCTS } from '../data';
 import { Star, ArrowRight, ShieldCheck, ShoppingBag, Grid, Layers, Sparkles } from 'lucide-react';
 import { trackPageView, trackProductClick, trackSelectItem, trackProductImageClick, trackAddToCart, trackAddToCartClick, trackEGiftClick } from '../lib/analytics';
 import { useApp } from '../context/AppContext';
+import { SEO } from '../components/SEO';
 
 export interface CollectionData {
   slug: string;
@@ -105,6 +106,10 @@ export const Collections: React.FC = () => {
 
     return (
       <div className="space-y-10 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+        <SEO 
+          title={`${activeCollection.name} | Curriculum & Catalog - SorryBaba.com`} 
+          description={activeCollection.description} 
+        />
         
         {/* Breadcrumb & Navigation */}
         <div className="flex justify-between items-center">
@@ -232,6 +237,10 @@ export const Collections: React.FC = () => {
   // Normal landing views listing all collections
   return (
     <div className="space-y-12 py-4 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title="Curated Reconciliation Gift Collections | SorryBaba.com" 
+        description="Explore our exclusively curated apology gift categories. Find premium best sellers, budget picks, new arrivals, and high-impact reconciliation options." 
+      />
       
       {/* Landing Header */}
       <section className="text-center max-w-xl mx-auto space-y-3">

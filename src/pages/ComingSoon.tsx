@@ -8,6 +8,7 @@ import { trackEvent } from '../lib/analytics';
 import { saveWaitingListEntry } from '../lib/waitingList';
 import { Sparkles, Heart, MessageCircle, Instagram, Facebook, Share2, ArrowRight, Music, AlertCircle } from 'lucide-react';
 import { safeStorage } from '../lib/storage';
+import { SEO } from '../components/SEO';
 
 interface ComingSoonProps {
   onBypass: () => void;
@@ -352,6 +353,10 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({ onBypass }) => {
 
   return (
     <div className="relative min-h-screen bg-slate-950 text-gray-100 flex flex-col justify-between overflow-hidden font-sans select-none">
+      <SEO 
+        title="SorryBaba | Coming Soon - Pre-order Custom Relationship Gifts" 
+        description="SorryBaba is preparing a unique platform for apology gifts, romantic surprises, meaningful connections and relationship recovery experiences." 
+      />
       
       {/* 1. ANIMATED LUXURY BACKGROUNDS */}
       {/* Deep purple radial glow, pink bottom haze */}

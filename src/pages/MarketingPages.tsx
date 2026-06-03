@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Mail, Gift, ArrowRight, Share2, Sparkles, Send, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import { trackPageView, trackEvent } from '../lib/analytics';
 
 export const MarketingPages: React.FC = () => {
@@ -46,8 +47,23 @@ export const MarketingPages: React.FC = () => {
     }, 850);
   };
 
+  let seoTitle = "Join Waiting List | SorryBaba.com";
+  let seoDescription = "Secure your early access privileges, free delivery coupons, and custom romantic guides.";
+
+  if (pageCtx === 'launch') {
+    seoTitle = "Launch Notification Registry | SorryBaba.com";
+    seoDescription = "Sign up to receive instant alerts and exclusive promotional discount packages when SorryBaba begins active dispatches.";
+  } else if (pageCtx === 'offers') {
+    seoTitle = "Exclusive Relationship Guides & Special Offers | SorryBaba.com";
+    seoDescription = "Claim custom coupons, seasonal relationship mending blueprints, and premium secret guides.";
+  } else if (pageCtx === 'referral') {
+    seoTitle = "SorryBaba Referral Program | Invite & Earn Discovers";
+    seoDescription = "Spread the harmony! Share SorryBaba with your friends, mending relationships together, and unlock complimentary surprise frames.";
+  }
+
   return (
     <div className="max-w-xl mx-auto py-8 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO title={seoTitle} description={seoDescription} />
       
       {/* 1. MARKETING CONTEXT: WAITLIST */}
       {pageCtx === 'waitlist' && (

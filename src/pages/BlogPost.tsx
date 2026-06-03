@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { BLOG_ARTICLES } from './Blog';
 import { ArrowLeft, Calendar, User, Clock, ChevronRight } from 'lucide-react';
 import { trackPageView } from '../lib/analytics';
+import { SEO } from '../components/SEO';
 
 export const BlogPost: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -19,6 +20,10 @@ export const BlogPost: React.FC = () => {
   if (!article) {
     return (
       <div className="text-center py-20 bg-white rounded-3xl border border-gray-150 max-w-sm mx-auto p-6 space-y-4">
+        <SEO 
+          title="Article Not Found | SorryBaba.com" 
+          description="The requested blog article has been moved or does not exist." 
+        />
         <span className="text-5xl">🕵️</span>
         <h3 className="font-display font-black text-gray-800 text-lg">Article Not Found!</h3>
         <p className="text-xs text-gray-400 font-semibold leading-relaxed">
@@ -33,6 +38,10 @@ export const BlogPost: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 py-4 font-sans selection:bg-brand-pink-soft selection:text-brand-pink">
+      <SEO 
+        title={`${article.title} | SorryBaba.com Blog`} 
+        description={article.excerpt} 
+      />
       
       {/* Breadcrumbs navigation structure */}
       <nav className="flex items-center gap-1.5 text-[11px] font-bold text-gray-400 uppercase tracking-wide">

@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { FAQ_ITEMS } from '../data';
 import { HelpCircle, ChevronRight, MessageSquareHeart } from 'lucide-react';
 import { trackPageView, trackEvent } from '../lib/analytics';
+import { SEO } from '../components/SEO';
 
 export const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0); // First open by default
@@ -22,6 +23,10 @@ export const FAQ: React.FC = () => {
 
   return (
     <div className="max-w-3xl mx-auto space-y-12 pb-16">
+      <SEO 
+        title="Frequently Asked Questions | SorryBaba.com Help Center" 
+        description="Have questions about deliveries, checkout, digital e-card setups, privacy, or custom physical hampers? Find all answers on our active FAQ page." 
+      />
       
       {/* FAQ Headings */}
       <section className="text-center space-y-3">

@@ -8,6 +8,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { SAMPLE_PRODUCTS } from '../data';
 import { Heart, Sparkles, Plus, Minus, ArrowLeft, Star, ChevronDown, ChevronUp, ShieldCheck, ShoppingBag } from 'lucide-react';
+import { SEO } from '../components/SEO';
 import {
   trackViewItem,
   trackProductView,
@@ -53,6 +54,10 @@ export const ProductDetails: React.FC = () => {
   if (!product) {
     return (
       <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 max-w-sm mx-auto shadow-xs p-6 space-y-4">
+        <SEO 
+          title="Apology Gift Not Found | SorryBaba.com" 
+          description="The requested apology gift was not found in our catalog. Browse our collection to find the perfect gift." 
+        />
         <span className="text-5xl">🙈</span>
         <h3 className="font-display font-black text-gray-800 text-lg">Product Not Found!</h3>
         <p className="text-xs text-gray-400 font-semibold leading-relaxed">
@@ -94,6 +99,10 @@ export const ProductDetails: React.FC = () => {
 
   return (
     <div className="space-y-12 pb-16">
+      <SEO 
+        title={`${product.name} - Apology Gift | SorryBaba.com`} 
+        description={`Send ${product.name} to express your sincere apologies. Price: LKR ${product.price.toLocaleString()}. Premium delivery and high-fidelity apology elements bundled.`} 
+      />
       
       {/* Return to catalogs row */}
       <div>
