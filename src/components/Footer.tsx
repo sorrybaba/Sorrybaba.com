@@ -126,7 +126,7 @@ export const Footer: React.FC = () => {
               >
                 WA
               </a>
-              <span className="text-[10px] font-mono text-gray-400">Call/WhatsApp: +94776826937</span>
+              <span className="text-[10px] font-mono text-gray-500">Call/WhatsApp: +94776826937</span>
             </div>
           </div>
 
@@ -204,7 +204,7 @@ export const Footer: React.FC = () => {
 
         </div>
 
-        <div className="border-t border-gray-100 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-gray-400">
+        <div className="border-t border-gray-100 mt-12 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-gray-500">
           <div>
             © {currentYear} <strong>SorryBaba.com</strong>. All Rights Reserved. Designed primarily for lovers in Sri Lanka.
           </div>

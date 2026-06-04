@@ -271,7 +271,7 @@ export const Home: React.FC = () => {
       <LazySection>
         <section className="py-12 bg-gradient-to-r from-brand-pink-soft/10 via-white to-brand-blue-soft/10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 rounded-3xl border border-brand-pink-soft/10 text-center space-y-6">
           <div className="max-w-xl mx-auto">
-            <h3 className="font-display font-black text-2xl text-gray-800">Communication is hard. Say Sorry nicely.</h3>
+            <h2 className="font-display font-black text-2xl text-gray-800">Communication is hard. Say Sorry nicely.</h2>
             <p className="text-xs text-gray-500 mt-2 font-medium">
               Arguments happen. However, avoiding communications after a fight is a relationship breaker. Reach out, break the silence, and tell them "My world is incomplete without you".
             </p>

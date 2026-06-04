@@ -36,7 +36,7 @@ export const CookiePolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Sparkles size={16} />
             </div>
-            <h4 className="text-gray-800 font-display font-bold text-xs">Essential Cart Storage</h4>
+            <h2 className="text-gray-800 font-display font-bold text-xs">Essential Cart Storage</h2>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">We use client cookies to hold items in your shopping back so they are not wiped when you refresh.</p>
           </div>
 
@@ -44,28 +44,28 @@ export const CookiePolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Info size={16} />
             </div>
-            <h4 className="text-gray-800 font-display font-bold text-xs">Private Analytics</h4>
+            <h2 className="text-gray-800 font-display font-bold text-xs">Private Analytics</h2>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">Anonymous GA4 sessions tracking helps us measure conversion and optimize layout performance.</p>
           </div>
         </div>
 
         <div className="space-y-4 pt-4 border-t border-gray-50">
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. What are cookies and local storage?</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. What are cookies and local storage?</h2>
           <p>
             Cookies are short fragments of text saved inside your client browser. LocalStorage and SessionStorage are modern web standards that allow web pages to securely cache non-sensitive data directly inside your computer. SorryBaba relies primarily on LocalStorage to provide instantaneous UI responsiveness without taxing database pipelines.
           </p>
 
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Essential Cart & Session Storage</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Essential Cart & Session Storage</h2>
           <p>
             Our context systems save your standard shopping bag products (`sorrybaba_cart_v2`) and local bypass preview choices (`sorrybaba_preview_mode`) securely in local memory. This ensures you can exit our window, review pricing details, and return with your customized letter draft intact.
           </p>
 
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Anonymous Performance Metrics</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Anonymous Performance Metrics</h2>
           <p>
             We deploy secure third-party tracking cookies via Google Analytics 4 (GA4) and Google Tag Manager (GTM). These cookies record basic metrics: which categories are clicked most (e.g. wife apology gifts vs husband gifts), view frequencies, and checkout starts. This collection does not link to your personalized text and remains entirely anonymous.
           </p>
 
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Controlling Storage Variables</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Controlling Storage Variables</h2>
           <p>
             You can clear all cookie parameters or client storage properties anytime by opening your browser Settings, selecting "Clear Browsing Data", and choosing "Cookies and site data". Doing so will reset your active shopping cart to zero.
           </p>

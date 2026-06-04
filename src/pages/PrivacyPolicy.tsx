@@ -41,7 +41,7 @@ export const PrivacyPolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Eye size={16} />
             </div>
-            <h4 className="text-gray-800 font-display font-bold text-xs">Private URL links</h4>
+            <h2 className="text-gray-800 font-display font-bold text-xs">Private URL links</h2>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">Your customized digital E-gifts are hidden from search engines.</p>
           </div>
 
@@ -49,7 +49,7 @@ export const PrivacyPolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Lock size={16} />
             </div>
-            <h4 className="text-gray-800 font-display font-bold text-xs">No Mock Leakage</h4>
+            <h2 className="text-gray-800 font-display font-bold text-xs">No Mock Leakage</h2>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">We never share your draft letters or email logs with third parties.</p>
           </div>
 
@@ -57,28 +57,28 @@ export const PrivacyPolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <FileKey size={16} />
             </div>
-            <h4 className="text-gray-800 font-display font-bold text-xs">Secure Archival</h4>
+            <h2 className="text-gray-800 font-display font-bold text-xs">Secure Archival</h2>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">Images uploaded for memory frames are deleted post design.</p>
           </div>
         </div>
 
         <div className="space-y-4 pt-4 border-t border-gray-50">
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. Information Collection</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. Information Collection</h2>
           <p>
             When placing an order or customizing an interactive card, we collect your name, email, phone number, WhatsApp identifier, mailing delivery address, and custom apology content. This data is collected solely to build your digital page or ship physical plush bears.
           </p>
 
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Secure Hosting Links</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Secure Hosting Links</h2>
           <p>
             Each customized e-greeting, digital flower bouquet, or photo slideshow runs on a hidden, randomly hash-generated URL (e.g., sorrybaba.com/egift/ax897f2). These pages are unindexed by design, meaning Google, Bing, and other crawlers cannot read or list them publicly. Only people you share the unique link with can view them.
           </p>
 
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Media Assets Deletion</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Media Assets Deletion</h2>
           <p>
             Any couple layout photographs you upload or share with our WhatsApp concierge for custom framing are securely processed by our layout artists. To protect your privacy, these photographs are permanently deleted from our local work server databases within 7 days after shipment confirmation.
           </p>
 
-          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Rights to Remove</h3>
+          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Rights to Remove</h2>
           <p>
             Want to delete a private interactive card or love letter page permanently? No problem! Simply write to us at <strong>sorrybabaofficial@gmail.com</strong> mentioning your order ID, and we will take down your digital materials immediately.
           </p>

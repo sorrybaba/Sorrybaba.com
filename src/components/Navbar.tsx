@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
               <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-brand-pink-text group-hover:text-brand-pink-text/90 transition-colors">
                 Sorry<span className="text-brand-purple-text">Baba</span><span className="text-brand-blue-text">.com</span>
               </span>
-              <span className="text-[9px] md:text-[10px] uppercase tracking-wider font-mono text-gray-400 font-semibold leading-none -mt-0.5">
+              <span className="text-[9px] md:text-[10px] uppercase tracking-wider font-mono text-gray-500 font-semibold leading-none -mt-0.5">
                 Say sorry • Send love
               </span>
             </div>
