@@ -36,7 +36,7 @@ export const RefundPolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Landmark size={16} />
             </div>
-            <h2 className="text-gray-800 font-display font-bold text-xs">Easy Adjustments</h2>
+            <h4 className="text-gray-800 font-display font-bold text-xs">Easy Adjustments</h4>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">Change text errors or details freely over our WhatsApp concierge before shipout.</p>
           </div>
 
@@ -44,7 +44,7 @@ export const RefundPolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <RefreshCcw size={16} />
             </div>
-            <h2 className="text-gray-800 font-display font-bold text-xs">Digital Redesigns</h2>
+            <h4 className="text-gray-800 font-display font-bold text-xs">Digital Redesigns</h4>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">If a digital card has spelling errors, we redesign and resend in under 15 mins.</p>
           </div>
 
@@ -52,28 +52,28 @@ export const RefundPolicy: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Truck size={16} />
             </div>
-            <h2 className="text-gray-800 font-display font-bold text-xs">Courier Damage</h2>
+            <h4 className="text-gray-800 font-display font-bold text-xs">Courier Damage</h4>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">If physical packages get damaged during courier transport, we reship free.</p>
           </div>
         </div>
 
         <div className="space-y-4 pt-4 border-t border-gray-50">
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. Custom Physical Products</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. Custom Physical Products</h3>
           <p>
             Any physical products that undergo personalized engraving (such as Glowing Couple Photo Blocks) or specific embroidery are crafted exclusively for your order. We do not accept standard returns for customized products. However, if the wood base or acrylic slab reaches you with scratching or layout defects, we will dispatch a replacement block immediately.
           </p>
 
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Electronic Digital E-Gifts</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Electronic Digital E-Gifts</h3>
           <p>
             For digital e-cards, virtual flower bouquets, and digital memory love letters, we initiate manual design work as soon as your checkout completes. Due to the rapid creation process (deliveries within 30 minutes), digital order cancellations are only supported before layout work commences. If any spelling, names, or image links are incorrect, our designer edits them live to ensure your partner reads an immaculate message.
           </p>
 
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Cancellations & Timeline Change</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Cancellations & Timeline Change</h3>
           <p>
             If you wish to change a courier delivery date or hold a shipment, please alert our WhatsApp coordinator at +94 776 826 937. As long as your present box has not departed our dispatch center in Colombo, we can adjust addresses, delay shipout timelines, or cancel physical products for a full bank-refund.
           </p>
 
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Relationship Outcome Disclaimer</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Relationship Outcome Disclaimer</h3>
           <p>
             While our packages are carefully designed based on emotional psychological principles to restore communication, SorryBaba.com cannot guarantee specific romantic outcomes or active forgiveness after delivery. We do not provide refunds or returns due to negative or indifferent relationship reconciliations.
           </p>

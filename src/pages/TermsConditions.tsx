@@ -41,7 +41,7 @@ export const TermsConditions: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <ShieldAlert size={16} />
             </div>
-            <h2 className="text-gray-800 font-display font-bold text-xs">Lawful Communication</h2>
+            <h4 className="text-gray-800 font-display font-bold text-xs">Lawful Communication</h4>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">No abusive, threatening, or illegal statements of harassment.</p>
           </div>
 
@@ -49,7 +49,7 @@ export const TermsConditions: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Hammer size={16} />
             </div>
-            <h2 className="text-gray-800 font-display font-bold text-xs">On-Demand Crafts</h2>
+            <h4 className="text-gray-800 font-display font-bold text-xs">On-Demand Crafts</h4>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">Our team designs customized frame pieces on placement.</p>
           </div>
 
@@ -57,28 +57,28 @@ export const TermsConditions: React.FC = () => {
             <div className="mx-auto w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-pink shadow-xs">
               <Truck size={16} />
             </div>
-            <h2 className="text-gray-800 font-display font-bold text-xs">Couriers Policy</h2>
+            <h4 className="text-gray-800 font-display font-bold text-xs">Couriers Policy</h4>
             <p className="text-[10px] text-gray-400 mt-0.5 leading-normal">Physical gifts require 1-3 business days across Sri Lanka.</p>
           </div>
         </div>
 
         <div className="space-y-4 pt-4 border-t border-gray-50">
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. Proper Content Conduct</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">1. Proper Content Conduct</h3>
           <p>
             SorryBaba.com is built as an emotional reconciliation platform intended to spread peace, cute apologies, and repair relationship bonds. You are strictly forbidden from placing orders with messages containing hate speech, obscenities, threats of physical force, cyberstalking, or any format of illegal harassment. We reserve the right to cancel orders and refund payments immediately if your customization contents violate these standards.
           </p>
 
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Customized Design Intellectual Property</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">2. Customized Design Intellectual Property</h3>
           <p>
             Our web vectors, logo mascot, custom code animations, and dynamic structural pages are the exclusive property of SorryBaba.com. Copying, rebuilding, or scraping our assets is strictly prohibited.
           </p>
 
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Dispatch & Couriers Limitation</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">3. Dispatch & Couriers Limitation</h3>
           <p>
             We coordinate delivery with high-grade island-wide courier partners (such as Domex and Pronto). While we strive to meet all estimated shipping times (1-2 days Colombo, 2-3 days outstation), we are not liable for slight delays caused by courier routing discrepancies, extreme weather patterns, or local public holidays.
           </p>
 
-          <h2 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Refunds and Cancellation</h2>
+          <h3 className="font-display font-bold text-sm text-gray-800 uppercase tracking-widest font-mono">4. Refunds and Cancellation</h3>
           <p>
             Since our products (digital e-gifts, handwritten calligraphy scrolls, and engraved acrylic glowing blocks) are customized on request, we do not support cancellation once our design work begins. For physical gifts damaged during courier shipment, we provide full, complimentary brand-new replacements.
           </p>

@@ -59,7 +59,7 @@ export const ProductDetails: React.FC = () => {
           description="The requested apology gift was not found in our catalog. Browse our collection to find the perfect gift." 
         />
         <span className="text-5xl">🙈</span>
-        <h1 className="font-display font-black text-gray-800 text-lg">Product Not Found!</h1>
+        <h3 className="font-display font-black text-gray-800 text-lg">Product Not Found!</h3>
         <p className="text-xs text-gray-400 font-semibold leading-relaxed">
           The requested item does not exist or has been removed from our current apology selection catalog.
         </p>

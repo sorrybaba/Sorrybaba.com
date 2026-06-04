@@ -45,12 +45,12 @@ export const About: React.FC = () => {
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="p-4 bg-white border border-gray-100 rounded-2xl space-y-1.5 shadow-xs">
               <ShieldCheck className="text-brand-pink" size={18} />
-              <h3 className="font-bold text-xs text-gray-800">100% Secure</h3>
+              <h4 className="font-bold text-xs text-gray-800">100% Secure</h4>
               <p className="text-[10px] text-gray-400 font-medium">Private messages are kept fully encrypted.</p>
             </div>
             <div className="p-4 bg-white border border-gray-100 rounded-2xl space-y-1.5 shadow-xs">
               <Sparkles className="text-brand-purple" size={18} />
-              <h3 className="font-bold text-xs text-gray-800">Personalized</h3>
+              <h4 className="font-bold text-xs text-gray-800">Personalized</h4>
               <p className="text-[10px] text-gray-400 font-medium">Every card is designed dynamically for you.</p>
             </div>
           </div>
