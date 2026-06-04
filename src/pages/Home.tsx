@@ -22,6 +22,33 @@ import {
   trackEGiftClick
 } from '../lib/analytics';
 
+// High performance scroll intersection wrapper for below-fold lazy loading
+const LazySection: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isVisible, setIsVisible] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '200px' });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="min-h-[120px]">
+      {isVisible ? children : null}
+    </div>
+  );
+};
+
 export const Home: React.FC = () => {
   const { addToCart } = useApp();
   const navigate = useNavigate();
@@ -132,137 +159,143 @@ export const Home: React.FC = () => {
       </section>
 
       {/* 2. CATEGORIES GRID */}
-      <CategoryCards />
+      <LazySection>
+        <CategoryCards />
+      </LazySection>
 
       {/* 3. POPULAR PRODUCTS CURATION SECTION */}
-      <section className="py-12 bg-white rounded-3xl border border-brand-pink-soft/10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-gray-50">
-          <div className="space-y-1">
-            <span className="text-[10px] uppercase font-mono tracking-wider font-extrabold text-brand-pink">Trending Apologies</span>
-            <h2 className="font-display font-bold text-2xl md:text-3xl text-gray-800 tracking-tight">
-              Best-Selling Ways to Say "Please Forgive Me"
-            </h2>
-          </div>
-          <Link to="/all-products" className="text-xs font-bold text-brand-pink hover:text-brand-pink/90 transition-colors mt-2 md:mt-0 flex items-center gap-1">
-            <span>View all apology catalog</span>
-            <span>→</span>
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="group bg-white rounded-3xl p-6 border border-gray-100 hover:border-brand-pink-soft/60 shadow-xs hover:shadow-cute transition-all duration-300 flex flex-col justify-between"
-            >
-              <div>
-                {/* Product badge */}
-                <div
-                  onClick={() => handleProductImageClick(product)}
-                  className="relative aspect-square w-full rounded-2xl bg-brand-bg/60 border border-brand-pink-soft/10 mb-5 flex items-center justify-center text-6xl font-normal overflow-hidden group-hover:scale-[1.02] transform transition-transform select-none cursor-pointer"
-                >
-                  <span className="filter drop-shadow-md select-none">{renderProductSymbol(product.image)}</span>
-                  <div className="absolute top-3 left-3 flex gap-1">
-                    {product.isEGift ? (
-                      <span className="text-[9px] font-mono uppercase bg-brand-blue-soft text-brand-blue font-extrabold px-2 py-0.5 rounded-lg border border-brand-blue-soft">E-Gift</span>
-                    ) : (
-                      <span className="text-[9px] font-mono uppercase bg-brand-pink-soft text-brand-pink font-extrabold px-2 py-0.5 rounded-lg border border-brand-pink-soft">Physical</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-[9px] uppercase font-mono tracking-widest font-bold text-brand-purple">
-                      Category • {product.category.replace('-', ' & ')}
-                    </span>
-                    <span className="text-xs font-bold text-yellow-500 flex items-center gap-1">
-                      ★ <span className="text-gray-600 font-mono text-[10px]">{product.rating}</span>
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-display font-extrabold text-gray-800 text-base leading-tight group-hover:text-brand-pink transition-colors">
-                    {product.isEGift ? (
-                      <button onClick={() => handleEGiftRedirect(product)} className="text-left font-bold focus:none outline-none cursor-pointer">
-                        {product.name}
-                      </button>
-                    ) : (
-                      <Link to={`/product/${product.id}`} onClick={() => handleProductClick(product)} className="font-bold">
-                        {product.name}
-                      </Link>
-                    )}
-                  </h3>
-                  
-                  <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed">
-                    {product.description}
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-gray-50 mt-6 flex items-center justify-between gap-2">
-                <div className="flex flex-col">
-                  {product.originalPrice && (
-                    <span className="text-[10px] line-through text-gray-400 font-mono">
-                      LKR {product.originalPrice.toLocaleString()}
-                    </span>
-                  )}
-                  <span className="text-base font-black text-gray-800 font-mono">
-                    LKR {product.price.toLocaleString()}
-                  </span>
-                </div>
-
-                {product.isEGift ? (
-                  <button
-                    onClick={() => handleEGiftRedirect(product)}
-                    className="px-4 py-2 bg-brand-blue text-white hover:bg-brand-blue/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
-                  >
-                    Customize E-Gift
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      addToCart(product, 1);
-                      trackAddToCart(product, 1);
-                      trackAddToCartClick(product.id, product.name, 'home_featured');
-                    }}
-                    className="px-4 py-2 bg-brand-pink text-white hover:bg-brand-pink/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
-                  >
-                    Add To Bag
-                  </button>
-                )}
-              </div>
+      <LazySection>
+        <section className="py-12 bg-white rounded-3xl border border-brand-pink-soft/10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-gray-50">
+            <div className="space-y-1">
+              <span className="text-[10px] uppercase font-mono tracking-wider font-extrabold text-brand-pink">Trending Apologies</span>
+              <h2 className="font-display font-bold text-2xl md:text-3xl text-gray-800 tracking-tight">
+                Best-Selling Ways to Say "Please Forgive Me"
+              </h2>
             </div>
-          ))}
-        </div>
-      </section>
+            <Link to="/all-products" className="text-xs font-bold text-brand-pink hover:text-brand-pink/90 transition-colors mt-2 md:mt-0 flex items-center gap-1">
+              <span>View all apology catalog</span>
+              <span>→</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="group bg-white rounded-3xl p-6 border border-gray-100 hover:border-brand-pink-soft/60 shadow-xs hover:shadow-cute transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  {/* Product badge */}
+                  <div
+                    onClick={() => handleProductImageClick(product)}
+                    className="relative aspect-square w-full rounded-2xl bg-brand-bg/60 border border-brand-pink-soft/10 mb-5 flex items-center justify-center text-6xl font-normal overflow-hidden group-hover:scale-[1.02] transform transition-transform select-none cursor-pointer"
+                  >
+                    <span className="filter drop-shadow-md select-none">{renderProductSymbol(product.image)}</span>
+                    <div className="absolute top-3 left-3 flex gap-1">
+                      {product.isEGift ? (
+                        <span className="text-[9px] font-mono uppercase bg-brand-blue-soft text-brand-blue font-extrabold px-2 py-0.5 rounded-lg border border-brand-blue-soft">E-Gift</span>
+                      ) : (
+                        <span className="text-[9px] font-mono uppercase bg-brand-pink-soft text-brand-pink font-extrabold px-2 py-0.5 rounded-lg border border-brand-pink-soft">Physical</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-[9px] uppercase font-mono tracking-widest font-bold text-brand-purple">
+                        Category • {product.category.replace('-', ' & ')}
+                      </span>
+                      <span className="text-xs font-bold text-yellow-500 flex items-center gap-1">
+                        ★ <span className="text-gray-600 font-mono text-[10px]">{product.rating}</span>
+                      </span>
+                    </div>
+                    
+                    <h3 className="font-display font-extrabold text-gray-800 text-base leading-tight group-hover:text-brand-pink transition-colors">
+                      {product.isEGift ? (
+                        <button onClick={() => handleEGiftRedirect(product)} className="text-left font-bold focus:none outline-none cursor-pointer">
+                          {product.name}
+                        </button>
+                      ) : (
+                        <Link to={`/product/${product.id}`} onClick={() => handleProductClick(product)} className="font-bold">
+                          {product.name}
+                        </Link>
+                      )}
+                    </h3>
+                    
+                    <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed">
+                      {product.description}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-gray-50 mt-6 flex items-center justify-between gap-2">
+                  <div className="flex flex-col">
+                    {product.originalPrice && (
+                      <span className="text-[10px] line-through text-gray-400 font-mono">
+                        LKR {product.originalPrice.toLocaleString()}
+                      </span>
+                    )}
+                    <span className="text-base font-black text-gray-800 font-mono">
+                      LKR {product.price.toLocaleString()}
+                    </span>
+                  </div>
+
+                  {product.isEGift ? (
+                    <button
+                      onClick={() => handleEGiftRedirect(product)}
+                      className="px-4 py-2 bg-brand-blue text-white hover:bg-brand-blue/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+                    >
+                      Customize E-Gift
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        addToCart(product, 1);
+                        trackAddToCart(product, 1);
+                        trackAddToCartClick(product.id, product.name, 'home_featured');
+                      }}
+                      className="px-4 py-2 bg-brand-pink text-white hover:bg-brand-pink/95 rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+                    >
+                      Add To Bag
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </LazySection>
 
       {/* 4. EMOTIONAL REHAB HABITS STATS */}
-      <section className="py-12 bg-gradient-to-r from-brand-pink-soft/10 via-white to-brand-blue-soft/10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 rounded-3xl border border-brand-pink-soft/10 text-center space-y-6">
-        <div className="max-w-xl mx-auto">
-          <h3 className="font-display font-black text-2xl text-gray-800">Communication is hard. Say Sorry nicely.</h3>
-          <p className="text-xs text-gray-500 mt-2 font-medium">
-            Arguments happen. However, avoiding communications after a fight is a relationship breaker. Reach out, break the silence, and tell them "My world is incomplete without you".
-          </p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-4 text-center">
-          <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
-            <div className="text-2xl font-black text-brand-pink font-mono">92%</div>
-            <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">Couples Reconnected</div>
+      <LazySection>
+        <section className="py-12 bg-gradient-to-r from-brand-pink-soft/10 via-white to-brand-blue-soft/10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 rounded-3xl border border-brand-pink-soft/10 text-center space-y-6">
+          <div className="max-w-xl mx-auto">
+            <h3 className="font-display font-black text-2xl text-gray-800">Communication is hard. Say Sorry nicely.</h3>
+            <p className="text-xs text-gray-500 mt-2 font-medium">
+              Arguments happen. However, avoiding communications after a fight is a relationship breaker. Reach out, break the silence, and tell them "My world is incomplete without you".
+            </p>
           </div>
-          <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
-            <div className="text-2xl font-black text-brand-blue font-mono">&lt;30m</div>
-            <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">E-Gift Speed</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-4 text-center">
+            <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
+              <div className="text-2xl font-black text-brand-pink font-mono">92%</div>
+              <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">Couples Reconnected</div>
+            </div>
+            <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
+              <div className="text-2xl font-black text-brand-blue font-mono">&lt;30m</div>
+              <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">E-Gift Speed</div>
+            </div>
+            <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
+              <div className="text-2xl font-black text-brand-purple font-mono">1/2d</div>
+              <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">Island Delivery</div>
+            </div>
+            <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
+              <div className="text-2xl font-black text-green-500 font-mono">24/7</div>
+              <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">WA Concierge Support</div>
+            </div>
           </div>
-          <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
-            <div className="text-2xl font-black text-brand-purple font-mono">1/2d</div>
-            <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">Island Delivery</div>
-          </div>
-          <div className="p-5 bg-white rounded-2xl shadow-xs border border-gray-100">
-            <div className="text-2xl font-black text-green-500 font-mono">24/7</div>
-            <div className="text-[10px] text-gray-500 font-bold mt-1 font-mono uppercase tracking-wider">WA Concierge Support</div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
     </div>
   );

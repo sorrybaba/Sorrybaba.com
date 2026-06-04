@@ -23,7 +23,23 @@ export function initAnalytics() {
   // Initialize GTM dataLayer if not initialized
   window.dataLayer = window.dataLayer || [];
 
+  // Eagerly define window.gtag so any events tracked before GTM/GA4 load are buffered safely in dataLayer
+  if (!window.gtag) {
+    const gtagBuffer = function (...args: any[]) {
+      window.dataLayer.push(args);
+    };
+    window.gtag = gtagBuffer as any;
+  }
+
+  let loaded = false;
+
   const deferLoad = () => {
+    if (loaded) return;
+    loaded = true;
+
+    // Remove the interaction event listeners to avoid leaks/overhead
+    cleanupListeners();
+
     // GTM activation tracking script if GTM_ID is defined and not already instantiated
     const hasGtmScript = Array.from(document.scripts).some(s => s.src.includes(`id=${GTM_ID}`));
     if (GTM_ID && !hasGtmScript) {
@@ -34,7 +50,7 @@ export function initAnalytics() {
       script.async = true;
       script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
       document.head.appendChild(script);
-      console.log(`[SorryBaba Analytics] GTM Initialized asynchronously with ID: ${GTM_ID}`);
+      console.log(`[SorryBaba Analytics] GTM Initialized on interaction with ID: ${GTM_ID}`);
     }
 
     // GA4 activation tracking script if GA4_ID is defined and not already instantiated
@@ -45,32 +61,27 @@ export function initAnalytics() {
       scriptTag.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`;
       document.head.appendChild(scriptTag);
 
-      function gtag(...args: any[]) {
-        window.dataLayer.push(args);
-      }
-      window.gtag = gtag as any;
-      gtag('js', new Date());
-      gtag('config', GA4_ID);
-      console.log(`[SorryBaba Analytics] GA4 Initialized asynchronously with ID: ${GA4_ID}`);
+      window.gtag!('js', new Date());
+      window.gtag!('config', GA4_ID);
+      console.log(`[SorryBaba Analytics] GA4 Initialized on interaction with ID: ${GA4_ID}`);
     }
   };
 
-  // Avoid running during critical boot up; schedule on idle callback or after window loaded
-  if (document.readyState === 'complete') {
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(() => deferLoad(), { timeout: 2000 });
-    } else {
-      setTimeout(deferLoad, 1000);
-    }
-  } else {
-    window.addEventListener('load', () => {
-      if ('requestIdleCallback' in window) {
-        (window as any).requestIdleCallback(() => deferLoad(), { timeout: 2000 });
-      } else {
-        setTimeout(deferLoad, 800);
-      }
+  const loadEvents = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll', 'mousemove'];
+
+  const cleanupListeners = () => {
+    loadEvents.forEach(event => {
+      window.removeEventListener(event, deferLoad, { capture: true });
     });
-  }
+  };
+
+  // Add passive event listeners for user interaction to avoid blocking the main thread
+  loadEvents.forEach(event => {
+    window.addEventListener(event, deferLoad, { capture: true, passive: true });
+  });
+
+  // Safe fallback to load after 3.8 seconds if no interaction has occurred (guarantees Lighthouse sees it if needed, or analytics captures silent users)
+  setTimeout(deferLoad, 3800);
 }
 
 // Low-level Tracking Core pushing both to standard GTM dataLayer and GA4
