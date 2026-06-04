@@ -23,34 +23,53 @@ export function initAnalytics() {
   // Initialize GTM dataLayer if not initialized
   window.dataLayer = window.dataLayer || [];
 
-  // GTM activation tracking script if GTM_ID is defined and not already instantiated
-  const hasGtmScript = Array.from(document.scripts).some(s => s.src.includes(`id=${GTM_ID}`));
-  if (GTM_ID && !hasGtmScript) {
-    if (!window.dataLayer.some(e => e.event === 'gtm.js')) {
-      window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+  const deferLoad = () => {
+    // GTM activation tracking script if GTM_ID is defined and not already instantiated
+    const hasGtmScript = Array.from(document.scripts).some(s => s.src.includes(`id=${GTM_ID}`));
+    if (GTM_ID && !hasGtmScript) {
+      if (!window.dataLayer.some(e => e.event === 'gtm.js')) {
+        window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      }
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
+      document.head.appendChild(script);
+      console.log(`[SorryBaba Analytics] GTM Initialized asynchronously with ID: ${GTM_ID}`);
     }
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
-    document.head.appendChild(script);
-    console.log(`[SorryBaba Analytics] GTM Initialized on demand with ID: ${GTM_ID}`);
-  }
 
-  // GA4 activation tracking script if GA4_ID is defined and not already instantiated
-  const hasGaScript = Array.from(document.scripts).some(s => s.src.includes(`id=${GA4_ID}`));
-  if (GA4_ID && !hasGaScript) {
-    const scriptTag = document.createElement('script');
-    scriptTag.async = true;
-    scriptTag.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`;
-    document.head.appendChild(scriptTag);
+    // GA4 activation tracking script if GA4_ID is defined and not already instantiated
+    const hasGaScript = Array.from(document.scripts).some(s => s.src.includes(`id=${GA4_ID}`));
+    if (GA4_ID && !hasGaScript) {
+      const scriptTag = document.createElement('script');
+      scriptTag.async = true;
+      scriptTag.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`;
+      document.head.appendChild(scriptTag);
 
-    function gtag(...args: any[]) {
-      window.dataLayer.push(args);
+      function gtag(...args: any[]) {
+        window.dataLayer.push(args);
+      }
+      window.gtag = gtag as any;
+      gtag('js', new Date());
+      gtag('config', GA4_ID);
+      console.log(`[SorryBaba Analytics] GA4 Initialized asynchronously with ID: ${GA4_ID}`);
     }
-    window.gtag = gtag as any;
-    gtag('js', new Date());
-    gtag('config', GA4_ID);
-    console.log(`[SorryBaba Analytics] GA4 Initialized on demand with ID: ${GA4_ID}`);
+  };
+
+  // Avoid running during critical boot up; schedule on idle callback or after window loaded
+  if (document.readyState === 'complete') {
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => deferLoad(), { timeout: 2000 });
+    } else {
+      setTimeout(deferLoad, 1000);
+    }
+  } else {
+    window.addEventListener('load', () => {
+      if ('requestIdleCallback' in window) {
+        (window as any).requestIdleCallback(() => deferLoad(), { timeout: 2000 });
+      } else {
+        setTimeout(deferLoad, 800);
+      }
+    });
   }
 }
 

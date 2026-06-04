@@ -12,36 +12,35 @@ import { CartDrawer } from './components/CartDrawer';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { initAnalytics, trackEvent, trackPageView } from './lib/analytics';
 import { SHOW_COMING_SOON, SITE_MODE } from './site-config';
-import { ComingSoon } from './pages/ComingSoon';
 import { safeStorage } from './lib/storage';
 
-
-// Page imports
-import { Home } from './pages/Home';
-import { WifeHusband } from './pages/WifeHusband';
-import { GirlfriendBoyfriend } from './pages/GirlfriendBoyfriend';
-import { OtherGifts } from './pages/OtherGifts';
-import { EGifts } from './pages/EGifts';
-import { AllProducts } from './pages/AllProducts';
-import { ProductDetails } from './pages/ProductDetails';
-import { CartPage } from './pages/CartPage';
-import { Checkout } from './pages/Checkout';
-import { Success } from './pages/Success';
-import { ContactUs } from './pages/ContactUs';
-import { FAQ } from './pages/FAQ';
-import { PrivacyPolicy } from './pages/PrivacyPolicy';
-import { TermsConditions } from './pages/TermsConditions';
-import { About } from './pages/About';
-import { HowItWorks } from './pages/HowItWorks';
-import { Blog } from './pages/Blog';
-import { BlogPost } from './pages/BlogPost';
-import { RefundPolicy } from './pages/RefundPolicy';
-import { CookiePolicy } from './pages/CookiePolicy';
-import { Collections } from './pages/Collections';
-import { AccountPage } from './pages/AccountPage';
-import { MarketingPages } from './pages/MarketingPages';
-import { PaymentPage } from './pages/PaymentPage';
-import ComingSoonAnalyticsDashboard from './pages/ComingSoonAnalytics';
+// Page imports using React.lazy for splitting bundles & tree-shaking
+const Home = React.lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
+const ComingSoon = React.lazy(() => import('./pages/ComingSoon').then(m => ({ default: m.ComingSoon })));
+const WifeHusband = React.lazy(() => import('./pages/WifeHusband').then(m => ({ default: m.WifeHusband })));
+const GirlfriendBoyfriend = React.lazy(() => import('./pages/GirlfriendBoyfriend').then(m => ({ default: m.GirlfriendBoyfriend })));
+const OtherGifts = React.lazy(() => import('./pages/OtherGifts').then(m => ({ default: m.OtherGifts })));
+const EGifts = React.lazy(() => import('./pages/EGifts').then(m => ({ default: m.EGifts })));
+const AllProducts = React.lazy(() => import('./pages/AllProducts').then(m => ({ default: m.AllProducts })));
+const ProductDetails = React.lazy(() => import('./pages/ProductDetails').then(m => ({ default: m.ProductDetails })));
+const CartPage = React.lazy(() => import('./pages/CartPage').then(m => ({ default: m.CartPage })));
+const Checkout = React.lazy(() => import('./pages/Checkout').then(m => ({ default: m.Checkout })));
+const Success = React.lazy(() => import('./pages/Success').then(m => ({ default: m.Success })));
+const ContactUs = React.lazy(() => import('./pages/ContactUs').then(m => ({ default: m.ContactUs })));
+const FAQ = React.lazy(() => import('./pages/FAQ').then(m => ({ default: m.FAQ })));
+const PrivacyPolicy = React.lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
+const TermsConditions = React.lazy(() => import('./pages/TermsConditions').then(m => ({ default: m.TermsConditions })));
+const About = React.lazy(() => import('./pages/About').then(m => ({ default: m.About })));
+const HowItWorks = React.lazy(() => import('./pages/HowItWorks').then(m => ({ default: m.HowItWorks })));
+const Blog = React.lazy(() => import('./pages/Blog').then(m => ({ default: m.Blog })));
+const BlogPost = React.lazy(() => import('./pages/BlogPost').then(m => ({ default: m.BlogPost })));
+const RefundPolicy = React.lazy(() => import('./pages/RefundPolicy').then(m => ({ default: m.RefundPolicy })));
+const CookiePolicy = React.lazy(() => import('./pages/CookiePolicy').then(m => ({ default: m.CookiePolicy })));
+const Collections = React.lazy(() => import('./pages/Collections').then(m => ({ default: m.Collections })));
+const AccountPage = React.lazy(() => import('./pages/AccountPage').then(m => ({ default: m.AccountPage })));
+const MarketingPages = React.lazy(() => import('./pages/MarketingPages').then(m => ({ default: m.MarketingPages })));
+const PaymentPage = React.lazy(() => import('./pages/PaymentPage').then(m => ({ default: m.PaymentPage })));
+const ComingSoonAnalyticsDashboard = React.lazy(() => import('./pages/ComingSoonAnalytics'));
 
 // Reusable route tracking listener & scroll-to-top on route navigation
 const RouteTracker: React.FC = () => {
@@ -71,7 +70,12 @@ const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: 
 
       {/* Primary Viewframe with margin limits */}
       <main className={showGlobalLayout ? "flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12" : "flex-1 w-full"}>
-        <Routes>
+        <React.Suspense fallback={
+          <div className="min-h-[60vh] flex items-center justify-center">
+            <div className="w-10 h-10 border-4 border-brand-pink border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }>
+          <Routes>
           <Route path="/" element={
             SITE_MODE === 'coming_soon' && !isPreviewActive ? (
               <ComingSoon onBypass={() => setIsPreviewActive(true)} />
@@ -174,6 +178,7 @@ const AppLayout: React.FC<{ isPreviewActive: boolean; setIsPreviewActive: (val: 
           {/* Fallback route */}
           <Route path="*" element={<Home />} />
         </Routes>
+        </React.Suspense>
       </main>
 
       {/* Persistent items */}

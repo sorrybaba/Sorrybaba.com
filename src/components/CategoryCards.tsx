@@ -34,10 +34,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, subtitle, link, icon
     : 'bg-purple-100/40 group-hover:bg-purple-100/60';
 
   const accentText = isPink
-    ? 'text-brand-pink bg-brand-pink-soft/40'
+    ? 'text-brand-pink-text bg-brand-pink-soft/40'
     : isBlue
-    ? 'text-brand-blue bg-shadow-blue-cute/20'
-    : 'text-brand-purple bg-purple-100';
+    ? 'text-brand-blue-text bg-brand-blue-soft/50'
+    : 'text-brand-purple-text bg-purple-100';
 
   const handleCardClick = () => {
     trackEvent('category_view', { category_title: title, path: link });
@@ -77,7 +77,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, subtitle, link, icon
             <span className="text-3xl filter drop-shadow-sm select-none">{emoji}</span>
           </div>
 
-          <div className="space-y-1.5Col">
+          <div className="space-y-1.5">
             <h3 className="font-display font-extrabold text-xl md:text-2xl text-gray-800 tracking-tight flex items-center gap-2">
               {title}
             </h3>
@@ -90,10 +90,10 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, subtitle, link, icon
         <div className="pt-2">
           <div className={`inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2 rounded-xl transition-all ${
             isPink 
-              ? 'text-white bg-brand-pink hover:bg-brand-pink/95' 
+              ? 'text-white bg-brand-pink-text hover:bg-brand-pink-text/95' 
               : isBlue 
-              ? 'text-white bg-brand-blue hover:bg-brand-blue/95' 
-              : 'text-white bg-brand-purple hover:bg-brand-purple/95'
+              ? 'text-white bg-brand-blue-text hover:bg-brand-blue-text/95' 
+              : 'text-white bg-brand-purple-text hover:bg-brand-purple-text/95'
           }`}>
             <span>View Gifts</span>
             <span className="group-hover:translate-x-1.5 transition-transform">→</span>
@@ -111,7 +111,7 @@ export const CategoryCards: React.FC = () => {
         
         {/* Section Title */}
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-          <span className="text-xs tracking-widest font-mono text-brand-pink font-extrabold bg-brand-pink-soft/30 px-3.5 py-1.5 rounded-full uppercase">
+          <span className="text-xs tracking-widest font-mono text-brand-pink-text font-extrabold bg-brand-pink-soft/30 px-3.5 py-1.5 rounded-full uppercase">
             Reconciliation Station 🌸
           </span>
           <h2 className="font-display font-black text-3xl md:text-4xl text-gray-800 tracking-tight mt-3">

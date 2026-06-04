@@ -56,8 +56,8 @@ export const Navbar: React.FC = () => {
               <img src="/logo.svg" alt="SorryBaba mascot face" className="w-full h-full" referrerPolicy="no-referrer" />
             </div>
             <div className="flex flex-col">
-              <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-brand-pink group-hover:text-brand-pink/90 transition-colors">
-                Sorry<span className="text-brand-purple">Baba</span><span className="text-brand-blue">.com</span>
+              <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-brand-pink-text group-hover:text-brand-pink-text/90 transition-colors">
+                Sorry<span className="text-brand-purple-text">Baba</span><span className="text-brand-blue-text">.com</span>
               </span>
               <span className="text-[9px] md:text-[10px] uppercase tracking-wider font-mono text-gray-400 font-semibold leading-none -mt-0.5">
                 Say sorry • Send love
@@ -67,12 +67,12 @@ export const Navbar: React.FC = () => {
 
           {/* Core Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-gray-700">
-            <Link to="/" className="hover:text-brand-pink transition-colors">Home</Link>
-            <Link to="/wife-husband-gifts" className="hover:text-brand-pink transition-colors">Wife & Husband</Link>
-            <Link to="/girlfriend-boyfriend-gifts" className="hover:text-brand-pink transition-colors">Girlfriend & Boyfriend</Link>
-            <Link to="/collections" className="hover:text-brand-pink transition-colors">Collections</Link>
-            <Link to="/blog" className="hover:text-brand-pink transition-colors text-gray-650 font-medium">Blog</Link>
-            <Link to="/faq" className="hover:text-brand-pink transition-colors text-gray-500 font-normal">FAQ</Link>
+            <Link to="/" className="hover:text-brand-pink-text transition-colors">Home</Link>
+            <Link to="/wife-husband-gifts" className="hover:text-brand-pink-text transition-colors">Wife & Husband</Link>
+            <Link to="/girlfriend-boyfriend-gifts" className="hover:text-brand-pink-text transition-colors">Girlfriend & Boyfriend</Link>
+            <Link to="/collections" className="hover:text-brand-pink-text transition-colors">Collections</Link>
+            <Link to="/blog" className="hover:text-brand-pink-text transition-colors text-gray-650 font-medium">Blog</Link>
+            <Link to="/faq" className="hover:text-brand-pink-text transition-colors text-gray-500 font-normal">FAQ</Link>
           </nav>
 
           {/* Search Bar Container */}
@@ -109,7 +109,7 @@ export const Navbar: React.FC = () => {
             {/* Quick Contact Button */}
             <Link
               to="/contact-us"
-              className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-semibold rounded-2xl text-brand-pink bg-brand-pink-soft/30 hover:bg-brand-pink-soft/50 transition-all border border-brand-pink-soft/40"
+              className="hidden sm:inline-flex items-center justify-center px-4 py-2 text-xs font-semibold rounded-2xl text-brand-pink-text bg-brand-pink-soft/30 hover:bg-brand-pink-soft/50 transition-all border border-brand-pink-soft/40"
             >
               Contact Us
             </Link>
@@ -117,7 +117,7 @@ export const Navbar: React.FC = () => {
             {/* Shopping Bag Trigger */}
             <button
               onClick={() => toggleCartDrawer(true)}
-              className="relative p-2.5 rounded-2xl border border-brand-pink-soft/40 bg-brand-pink-soft/10 text-brand-pink hover:bg-brand-pink-soft/30 transition-all focus:outline-none"
+              className="relative p-2.5 rounded-2xl border border-brand-pink-soft/40 bg-brand-pink-soft/10 text-brand-pink-text hover:bg-brand-pink-soft/30 transition-all focus:outline-none"
               aria-label="Open Cart"
               id="cart-trigger-btn"
             >

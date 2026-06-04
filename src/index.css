@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -9,10 +8,13 @@
   /* Custom Saturated Color Palette of SorryBaba.com (Vibrant Palette Theme) */
   --color-brand-bg: #FFF5F9;
   --color-brand-pink: #FF1A75;
+  --color-brand-pink-text: #D0005C;
   --color-brand-pink-soft: #FFE6F0;
   --color-brand-blue: #00B2FF;
+  --color-brand-blue-text: #0077A3;
   --color-brand-blue-soft: #E6F7FF;
   --color-brand-purple: #9B66FF;
+  --color-brand-purple-text: #7124F5;
   --color-brand-purple-soft: #F3E8FF;
   --color-brand-text: #111827;
 

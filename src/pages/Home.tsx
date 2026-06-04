@@ -95,7 +95,7 @@ export const Home: React.FC = () => {
                 <Link
                   to="/all-products"
                   onClick={() => trackSendGiftCtaClick()}
-                  className="w-full sm:w-auto px-8 py-4 bg-brand-pink text-white font-extrabold text-sm rounded-2xl shadow-cute hover:bg-brand-pink/95 transition-all text-center flex items-center justify-center gap-2 hover:-translate-y-0.5"
+                  className="w-full sm:w-auto px-8 py-4 bg-brand-pink-text text-white font-extrabold text-sm rounded-2xl shadow-cute hover:bg-brand-pink-text/95 transition-all text-center flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 >
                   <span>Send A Gift</span>
                   <Send size={15} />
@@ -107,7 +107,7 @@ export const Home: React.FC = () => {
                     trackExploreEGiftsCtaClick();
                     handleEGiftRedirect('e-gift-sorry-card');
                   }}
-                  className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-brand-pink-soft text-brand-pink font-extrabold text-sm rounded-2xl shadow-sm hover:bg-brand-pink-soft/10 transition-all text-center flex items-center justify-center gap-2 hover:-translate-y-0.5"
+                  className="w-full sm:w-auto px-8 py-4 bg-white border-2 border-brand-pink-soft text-brand-pink-text font-extrabold text-sm rounded-2xl shadow-sm hover:bg-brand-pink-soft/10 transition-all text-center flex items-center justify-center gap-2 hover:-translate-y-0.5"
                 >
                   <Sparkles size={15} />
                   <span>Explore E-Gifts</span>
@@ -115,8 +115,8 @@ export const Home: React.FC = () => {
               </div>
 
               {/* Heart Warming trust note snippet */}
-              <div className="pt-6 flex items-center gap-2 justify-center lg:justify-start text-xs text-gray-400 font-mono">
-                <BadgeCheck size={16} className="text-brand-pink" />
+              <div className="pt-6 flex items-center gap-2 justify-center lg:justify-start text-xs text-gray-500 font-mono">
+                <BadgeCheck size={16} className="text-brand-pink-text" />
                 <span>12,400+ Sri Lankan relationships mended since 2024</span>
               </div>
             </div>
